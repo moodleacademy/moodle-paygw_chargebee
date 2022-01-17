@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<libraries>
+    <library>
+        <location>externallib/chargebee-php</location>
+        <name>Chargebee PHP Client Library - API V2</name>
+        <version>3.2.1</version>
+        <license>MIT License</license>
+        <licenseversion>1</licenseversion>
+    </library>
+</libraries>
