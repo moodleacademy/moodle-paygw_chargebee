@@ -26,3 +26,20 @@
 defined('MOODLE_INTERNAL') || die();
 
 $string['pluginname'] = 'Chargebee';
+$string['pluginname_desc'] = 'The Chargebee plugin allows you to receive payments via Chargebee with Braintree.';
+$string['apikey'] = 'API Key';
+$string['apikey_help'] = 'The API key that we use to identifier ourselves with Stripe';
+$string['secretkey'] = 'Secret Key';
+$string['secretkey_help'] = 'Secret key to authenticate with Stripe';
+$string['paymentmethods'] = 'Payment Methods';
+$string['allowpromotioncodes'] = 'Allow Promotion Codes';
+$string['gatewaydescription'] = 'Braintree is an authorised payment gateway provider for processing credit card transactions.';
+$string['enableautomatictax'] = 'Enable automatic tax';
+$string['enableautomatictax_desc'] = 'Automatic tax must be enabled and configured in the Stripe dashboard.';
+$string['defaulttaxbehavior'] = 'Default tax behavior';
+$string['defaulttaxbehavior_help'] = 'Default behavior of tax (inclusive, exclusive). Changeable in Stripe dashboard.';
+
+$string['taxbehavior:exclusive'] = 'Exclusive';
+$string['taxbehavior:inclusive'] = 'Inclusive';
+
+$string['paymentmethod:card'] = 'Card';
