@@ -23,7 +23,7 @@
  */
 
 require_once(__DIR__ . '/../../../config.php');
-require_once($CFG->dirroot . '/externallib/autoload.php');
+require_once($CFG->dirroot . '/.extlib/autoload.php');
 
 use core_payment\helper as payment_helper;
 use paygw_chargebee\chargebee_helper;
