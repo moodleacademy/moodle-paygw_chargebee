@@ -77,31 +77,13 @@ class gateway extends \core_payment\gateway {
     public static function add_configuration_to_gateway_form(account_gateway $form): void {
         $mform = $form->get_mform();
 
+        $mform->addElement('text', 'sitename', get_string('sitename', 'paygw_chargebee'));
+        $mform->setType('sitename', PARAM_TEXT);
+        $mform->addHelpButton('sitename', 'sitename', 'paygw_chargebee');
+
         $mform->addElement('text', 'apikey', get_string('apikey', 'paygw_chargebee'));
         $mform->setType('apikey', PARAM_TEXT);
         $mform->addHelpButton('apikey', 'apikey', 'paygw_chargebee');
-
-        $mform->addElement('text', 'secretkey', get_string('secretkey', 'paygw_chargebee'));
-        $mform->setType('secretkey', PARAM_TEXT);
-        $mform->addHelpButton('secretkey', 'secretkey', 'paygw_chargebee');
-
-        $paymentmethods = [
-            'card' => get_string('paymentmethod:card', 'paygw_chargebee')
-        ];
-        $method = $mform->addElement('select', 'paymentmethods', get_string('paymentmethods', 'paygw_chargebee'), $paymentmethods);
-        $mform->setType('paymentmethods', PARAM_TEXT);
-        $mform->setDefault('paymentmethods', 'card');
-        $method->setMultiple(true);
-
-
-        $mform->addElement('advcheckbox', 'enableautomatictax', get_string('enableautomatictax', 'paygw_chargebee'),
-            get_string('enableautomatictax_desc', 'paygw_chargebee'));
-
-        $mform->addElement('select', 'defaulttaxbehavior', get_string('defaulttaxbehavior', 'paygw_chargebee'), [
-            'exclusive' => get_string('taxbehavior:exclusive', 'paygw_chargebee'),
-            'inclusive' => get_string('taxbehavior:inclusive', 'paygw_chargebee'),
-        ]);
-        $mform->addHelpButton('defaulttaxbehavior', 'defaulttaxbehavior', 'paygw_chargebee');
     }
 
     /**
@@ -114,7 +96,7 @@ class gateway extends \core_payment\gateway {
      */
     public static function validate_gateway_form(account_gateway $form,
         \stdClass $data, array $files, array &$errors): void {
-        if ($data->enabled && (empty($data->apikey) || empty($data->secretkey) || empty($data->paymentmethods))) {
+        if ($data->enabled && (empty($data->apikey) || empty($data->sitename))) {
             $errors['enabled'] = get_string('gatewaycannotbeenabled', 'payment');
         }
     }
