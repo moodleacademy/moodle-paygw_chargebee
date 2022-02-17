@@ -28,7 +28,7 @@ use ChargeBee\ChargeBee\Environment;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . '/.extlib/autoload.php');
+require_once($CFG->dirroot . '/payment/gateway/chargebee/.extlib/autoload.php');
 
 /**
  * The helper class for Chargebee payment gateway.

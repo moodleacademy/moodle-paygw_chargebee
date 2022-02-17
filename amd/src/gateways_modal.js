@@ -34,7 +34,7 @@ const showModalWithPlaceholder = async() => {
 export const process = (component, paymentArea, itemId, description) => {
     return showModalWithPlaceholder()
         .then(() => {
-            location.href = M.cfg.wwwroot + '/pay.php?' +
+            location.href = M.cfg.wwwroot + '/payment/gateway/chargebee/pay.php?' +
                 'component=' + component +
                 '&paymentarea=' + paymentArea +
                 '&itemid=' + itemId +
