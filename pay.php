@@ -23,11 +23,10 @@
  */
 
 require_once(__DIR__ . '/../../../config.php');
-require_once($CFG->dirroot . '/.extlib/autoload.php');
+require_once($CFG->dirroot . '/payment/gateway/chargebee/.extlib/autoload.php');
 
 use core_payment\helper as payment_helper;
 use paygw_chargebee\chargebee_helper;
-use ChargeBee\ChargeBee\Models\HostedPage;
 
 require_login();
 
@@ -36,18 +35,6 @@ $paymentarea = required_param('paymentarea', PARAM_ALPHANUMEXT);
 $itemid = required_param('itemid', PARAM_INT);
 $description = required_param('description', PARAM_TEXT);
 
-// Get fee details
-$enrolfee = $DB->get_record('enrol', ['enrol' => 'fee', 'id' => $itemid]);
-
-if (!empty($enrolfee)) {
-  $course = $DB->get_record('course', ['id' => $enrolfee->courseid]);
-  //$url = course_get_url($courseid);
-  // Chargebee also returns an id param after successful payment
-  $url = $CFG->wwwroot . '/course/view.php?name=' . $course->shortname;
-} else {
-  $url = $CFG->wwwroot;
-}
-
 $config = (object) payment_helper::get_gateway_configuration($component, $paymentarea, $itemid, 'chargebee');
 $payable = payment_helper::get_payable($component, $paymentarea, $itemid);
 $surcharge = payment_helper::get_gateway_surcharge('chargebee');
@@ -55,31 +42,41 @@ $cost = payment_helper::get_rounded_cost($payable->get_amount(), $payable->get_c
 
 $chargebeehelper = new chargebee_helper($config->sitename, $config->apikey);
 
+// Moodle sets this to &amp; when '&' is expected. see: MDL-71368.
+// $redirecturl = new moodle_url(
+//   '/payment/gateway/chargebee/process.php',
+//   array('component' => $component, 'paymentarea' => $paymentarea, 'itemid' => $itemid)
+// );
+
+$redirecturl = $CFG->wwwroot . '/payment/gateway/chargebee/process.php?component=' . $component . '&paymentarea=' .
+  $paymentarea . '&itemid=' . $itemid;
 /// TODO: Move this into helper
-$result = HostedPage::checkoutOneTime(array(
-  "currency_code" => $payable->get_currency(),
-  "redirectUrl" => $url,
-  "billingAddress" => array(
-    "firstName" => $USER->firstname,
-    "lastName" => $USER->lastname,
-    "line1" => "PO Box 9999",
-    "city" => "Perth",
-    "state" => "Western Australia",
-    "zip" => "6872",
-    "country" => "AU"
-  ),
-  "customer" => array(
-    "id" => "__ma_test__moodleid-" . $USER->id,
-    "email" => $USER->email,
-    "firstName" => $USER->firstname,
-    "lastName" => $USER->lastname,
-  ),
-  "charges" => array(array(
-    "amount" => $cost * 100,
-    "description" => "Course fee"
-  ))
-));
+// $result = HostedPage::checkoutOneTime(array(
+//   "currency_code" => $payable->get_currency(),
+//   "redirectUrl" => $redirecturl,
+//   // "billingAddress" => array(
+//   //   "firstName" => $USER->firstname,
+//   //   "lastName" => $USER->lastname,
+//   //   "line1" => "PO Box 9999",
+//   //   "city" => "Perth",
+//   //   "state" => "Western Australia",
+//   //   "zip" => "6872",
+//   //   "country" => "AU"
+//   // ),
+//   "customer" => array(
+//     "id" => "AC-" . $USER->id,
+//     "email" => $USER->email,
+//     "firstName" => $USER->firstname,
+//     "lastName" => $USER->lastname,
+//   ),
+//   "charges" => array(array(
+//     "amount" => $cost * 100,
+//     "description" => $description
+//   ))
+// ));
 
-$hostedPage = $result->hostedPage();
+// $hostedPage = $result->hostedPage();
 
-redirect($hostedPage->url);
+$checkouturl = $chargebeehelper->get_checkout_url($USER, $cost, $payable->get_currency(), $description, $redirecturl);
+
+redirect($checkouturl);

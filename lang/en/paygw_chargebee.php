@@ -34,3 +34,6 @@ $string['sitename_help'] = 'Chargebee site name';
 $string['paymentmethods'] = 'Payment Methods';
 $string['gatewayname'] = 'Chargebee';
 $string['gatewaydescription'] = 'Braintree is an authorised payment gateway provider for processing credit card transactions.';
+$string['paymentsuccessful'] = 'Thank you. Payment was successful';
+$string['paymentcancelled'] = 'Payment was cancelled';
+$string['paymentmismatch'] = 'Error. Payment details do not match.';
