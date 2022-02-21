@@ -92,7 +92,7 @@ class chargebee_helper {
      * @return string Hosted page url
      */
     public function get_checkout_url($user, float $cost, string $currency, string $description, string $redirecturl): string {
-        // Get the Chargebee HostedPage
+        // Get the Chargebee HostedPage.
         $result = HostedPage::checkoutOneTime(array(
             "currency_code" => $currency,
             "redirectUrl" => $redirecturl,
@@ -108,7 +108,7 @@ class chargebee_helper {
             ))
         ));
 
-        // Return the url of the HostedPage
+        // Return the url of the HostedPage.
         return $result->hostedPage()->url;
     }
 
@@ -122,19 +122,19 @@ class chargebee_helper {
      * @return bool
      */
     public function verify_transaction(string $identifier, $user, float $cost, string $currency): bool {
-        // Retrieve hosted page
+        // Retrieve hosted page.
         $result = HostedPage::retrieve($identifier);
-        $hostedPage = $result->hostedPage();
+        $hostedpage = $result->hostedPage();
 
-        $timediff = time() - $hostedPage->content['invoice']['paid_at'];
+        $timediff = time() - $hostedpage->content['invoice']['paid_at'];
 
-        // Verify against the following details: status, customer_id, amount, currency, date
+        // Verify against the following details: status, customer_id, amount, currency, date.
         if (
             $timediff < 60 &&
-            $hostedPage->content['invoice']['status'] === 'paid' &&
-            $hostedPage->content['invoice']['customer_id'] == $this->customeridprefix . $user->id &&
-            $hostedPage->content['invoice']['currency_code'] === $currency &&
-            $hostedPage->content['invoice']['amount_paid'] == ($cost * 100)
+            $hostedpage->content['invoice']['status'] === 'paid' &&
+            $hostedpage->content['invoice']['customer_id'] == $this->customeridprefix . $user->id &&
+            $hostedpage->content['invoice']['currency_code'] === $currency &&
+            $hostedpage->content['invoice']['amount_paid'] == ($cost * 100)
         ) {
             return true;
         }
@@ -166,14 +166,14 @@ class chargebee_helper {
     public function save_transaction_details(string $identifier, int $userid, int $paymentid) {
         global $DB;
 
-        $hostedPage = $this->get_hosted_page($identifier);
+        $hostedpage = $this->get_hosted_page($identifier);
 
         $record = new \stdClass();
         $record->paymentid = $paymentid;
         $record->userid = $userid;
-        $record->customerid = $hostedPage->content['invoice']['customer_id'];
-        $record->transactionid = $hostedPage->content['invoice']['linked_payments'][0]['txn_id'];
-        $record->invoicenumber = $hostedPage->content['invoice']['id'];
+        $record->customerid = $hostedpage->content['invoice']['customer_id'];
+        $record->transactionid = $hostedpage->content['invoice']['linked_payments'][0]['txn_id'];
+        $record->invoicenumber = $hostedpage->content['invoice']['id'];
 
         $DB->insert_record('paygw_chargebee', $record);
     }

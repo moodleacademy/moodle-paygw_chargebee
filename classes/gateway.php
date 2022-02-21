@@ -35,8 +35,8 @@ use core_payment\form\account_gateway;
 class gateway extends \core_payment\gateway {
     /**
      * The full list of currencies supported by Chargebee.
-     * Only certain currencies are supported based on the payment gateway and currencies enabled, the plugin does not account for that
-     * when giving the list of supported currencies.
+     * Only certain currencies are supported based on the payment gateway and currencies enabled,
+     * the plugin does not account for that when giving the list of supported currencies.
      *
      * {@link https://www.chargebee.com/docs/2.0/supported-currencies.html}
      *

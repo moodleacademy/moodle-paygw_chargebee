@@ -31,8 +31,8 @@ use paygw_chargebee\chargebee_helper;
 
 require_login();
 
-$id = required_param('id', PARAM_ALPHANUMEXT); // Unique identifier of the hosted page resource
-$state = required_param('state', PARAM_TEXT); // succeeded, failed or cancelled.
+$id = required_param('id', PARAM_ALPHANUMEXT); // Unique identifier of the hosted page resource.
+$state = required_param('state', PARAM_TEXT); // State: succeeded, failed or cancelled.
 $component = required_param('component', PARAM_ALPHANUMEXT);
 $paymentarea = required_param('paymentarea', PARAM_ALPHANUMEXT);
 $itemid = required_param('itemid', PARAM_INT);

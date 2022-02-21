@@ -42,12 +42,6 @@ $cost = payment_helper::get_rounded_cost($payable->get_amount(), $payable->get_c
 
 $chargebeehelper = new chargebee_helper($config->sitename, $config->apikey, $config->customeridprefix);
 
-// Moodle sets this to &amp; when '&' is expected. see: MDL-71368.
-// $redirecturl = new moodle_url(
-//   '/payment/gateway/chargebee/process.php',
-//   array('component' => $component, 'paymentarea' => $paymentarea, 'itemid' => $itemid)
-// );
-
 $redirecturl = $CFG->wwwroot . '/payment/gateway/chargebee/process.php?component=' . $component . '&paymentarea=' .
   $paymentarea . '&itemid=' . $itemid;
 
