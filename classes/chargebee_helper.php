@@ -137,4 +137,40 @@ class chargebee_helper {
 
         return false;
     }
+
+    /**
+     * Get a Chargebee Hosted Page from a given unique identifier
+     *
+     * @param string $identifier unique identifier of the hosted page resource
+     * @return
+     */
+    public function get_hosted_page(string $identifier) {
+        // Retrieve hosted page.
+        $result = HostedPage::retrieve($identifier);
+
+        return $result->hostedPage();
+    }
+
+    /**
+     * Record Chargebee transaction details
+     *
+     * @param string $identifier unique identifier of the hosted page resource
+     * @param integer $userid id of the user
+     * @param integer $paymentid id from payments table
+     * @return void
+     */
+    public function save_transaction_details(string $identifier, int $userid, int $paymentid) {
+        global $DB;
+
+        $hostedPage = $this->get_hosted_page($identifier);
+
+        $record = new \stdClass();
+        $record->paymentid = $paymentid;
+        $record->userid = $userid;
+        $record->customerid = $hostedPage->content['invoice']['customer_id'];
+        $record->transactionid = $hostedPage->content['invoice']['linked_payments'][0]['txn_id'];
+        $record->invoicenumber = $hostedPage->content['invoice']['id'];
+
+        $DB->insert_record('paygw_chargebee', $record);
+    }
 }

@@ -58,6 +58,10 @@ if ($state === $chargebeehelper::STATUS_SUCCEEDED) {
             $payable->get_currency(),
             'chargebee'
         );
+
+        // Record Chargebee transaction details.
+        $chargebeehelper->save_transaction_details($id, $USER->id, $paymentid);
+
         payment_helper::deliver_order($component, $paymentarea, $itemid, $paymentid, $USER->id);
 
         // Find redirection.
