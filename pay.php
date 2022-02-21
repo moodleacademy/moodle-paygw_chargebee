@@ -50,32 +50,6 @@ $chargebeehelper = new chargebee_helper($config->sitename, $config->apikey, $con
 
 $redirecturl = $CFG->wwwroot . '/payment/gateway/chargebee/process.php?component=' . $component . '&paymentarea=' .
   $paymentarea . '&itemid=' . $itemid;
-/// TODO: Move this into helper
-// $result = HostedPage::checkoutOneTime(array(
-//   "currency_code" => $payable->get_currency(),
-//   "redirectUrl" => $redirecturl,
-//   // "billingAddress" => array(
-//   //   "firstName" => $USER->firstname,
-//   //   "lastName" => $USER->lastname,
-//   //   "line1" => "PO Box 9999",
-//   //   "city" => "Perth",
-//   //   "state" => "Western Australia",
-//   //   "zip" => "6872",
-//   //   "country" => "AU"
-//   // ),
-//   "customer" => array(
-//     "id" => "AC-" . $USER->id,
-//     "email" => $USER->email,
-//     "firstName" => $USER->firstname,
-//     "lastName" => $USER->lastname,
-//   ),
-//   "charges" => array(array(
-//     "amount" => $cost * 100,
-//     "description" => $description
-//   ))
-// ));
-
-// $hostedPage = $result->hostedPage();
 
 $checkouturl = $chargebeehelper->get_checkout_url($USER, $cost, $payable->get_currency(), $description, $redirecturl);
 
