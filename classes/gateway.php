@@ -84,6 +84,10 @@ class gateway extends \core_payment\gateway {
         $mform->addElement('text', 'apikey', get_string('apikey', 'paygw_chargebee'));
         $mform->setType('apikey', PARAM_TEXT);
         $mform->addHelpButton('apikey', 'apikey', 'paygw_chargebee');
+
+        $mform->addElement('text', 'customeridprefix', get_string('customeridprefix', 'paygw_chargebee'));
+        $mform->setType('customeridprefix', PARAM_TEXT);
+        $mform->addHelpButton('customeridprefix', 'customeridprefix', 'paygw_chargebee');
     }
 
     /**

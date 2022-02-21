@@ -38,7 +38,7 @@ $paymentarea = required_param('paymentarea', PARAM_ALPHANUMEXT);
 $itemid = required_param('itemid', PARAM_INT);
 
 $config = (object) payment_helper::get_gateway_configuration($component, $paymentarea, $itemid, 'chargebee');
-$chargebeehelper = new chargebee_helper($config->sitename, $config->apikey);
+$chargebeehelper = new chargebee_helper($config->sitename, $config->apikey, $config->customeridprefix);
 
 if ($state === $chargebeehelper::STATUS_SUCCEEDED) {
     $payable = payment_helper::get_payable($component, $paymentarea, $itemid);

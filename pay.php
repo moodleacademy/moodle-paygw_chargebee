@@ -40,7 +40,7 @@ $payable = payment_helper::get_payable($component, $paymentarea, $itemid);
 $surcharge = payment_helper::get_gateway_surcharge('chargebee');
 $cost = payment_helper::get_rounded_cost($payable->get_amount(), $payable->get_currency(), $surcharge);
 
-$chargebeehelper = new chargebee_helper($config->sitename, $config->apikey);
+$chargebeehelper = new chargebee_helper($config->sitename, $config->apikey, $config->customeridprefix);
 
 // Moodle sets this to &amp; when '&' is expected. see: MDL-71368.
 // $redirecturl = new moodle_url(

@@ -29,8 +29,6 @@ use ChargeBee\ChargeBee\Models\HostedPage;
 
 defined('MOODLE_INTERNAL') || die();
 
-define('CHARGEBEE_USER_PREFIX', "AC-"); /// TODO: Move this to settings.
-
 require_once($CFG->dirroot . '/payment/gateway/chargebee/.extlib/autoload.php');
 
 /**
@@ -65,14 +63,20 @@ class chargebee_helper {
     private $apikey;
 
     /**
+     * @var string Prefix to use when creating customers in Chargebee.
+     */
+    private $customeridprefix;
+
+    /**
      * Initialise the Chargebee API client.
      *
      * @param string $apikey
      * @param string $sitename
      */
-    public function __construct(string $sitename, string $apikey) {
+    public function __construct(string $sitename, string $apikey, $customeridprefix) {
         $this->apikey = $apikey;
         $this->sitename = $sitename;
+        $this->customeridprefix = $customeridprefix;
 
         Environment::configure($this->sitename, $this->apikey);
     }
@@ -93,7 +97,7 @@ class chargebee_helper {
             "currency_code" => $currency,
             "redirectUrl" => $redirecturl,
             "customer" => array(
-                "id" => CHARGEBEE_USER_PREFIX . $user->id, /// Get this values from settings/config.
+                "id" => $this->customeridprefix . $user->id,
                 "email" => $user->email,
                 "firstName" => $user->firstname,
                 "lastName" => $user->lastname,
@@ -128,7 +132,7 @@ class chargebee_helper {
         if (
             $timediff < 60 &&
             $hostedPage->content['invoice']['status'] === 'paid' &&
-            $hostedPage->content['invoice']['customer_id'] == CHARGEBEE_USER_PREFIX . $user->id &&
+            $hostedPage->content['invoice']['customer_id'] == $this->customeridprefix . $user->id &&
             $hostedPage->content['invoice']['currency_code'] === $currency &&
             $hostedPage->content['invoice']['amount_paid'] == ($cost * 100)
         ) {
