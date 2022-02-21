@@ -1,10 +1,17 @@
 <?xml version="1.0"?>
 <libraries>
     <library>
-        <location>externallib/chargebee-php</location>
+        <location>.extlib/chargebee-php</location>
         <name>Chargebee PHP Client Library - API V2</name>
         <version>3.2.1</version>
         <license>MIT License</license>
         <licenseversion>1</licenseversion>
     </library>
+    <library>
+        <location>.extlib/GuzzleHttp</location>
+        <name>Guzzle, an extensible PHP HTTP client</name>
+        <version>7.3.0</version>
+        <license>MIT License</license>
+        <licenseversion>1</licenseversion>
+  </library>
 </libraries>
