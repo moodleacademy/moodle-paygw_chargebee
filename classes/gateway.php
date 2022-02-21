@@ -34,36 +34,37 @@ use core_payment\form\account_gateway;
  */
 class gateway extends \core_payment\gateway {
     /**
-     * The full list of currencies supported by Stripe regardless of account origin country.
-     * Only certain currencies are supported based on the users account, the plugin does not account for that
+     * The full list of currencies supported by Chargebee.
+     * Only certain currencies are supported based on the payment gateway and currencies enabled, the plugin does not account for that
      * when giving the list of supported currencies.
      *
-     * {@link https://stripe.com/docs/currencies}
+     * {@link https://www.chargebee.com/docs/2.0/supported-currencies.html}
      *
      * @return string[]
      */
     public static function get_supported_currencies(): array {
         return [
-            'USD', 'AED', 'ALL', 'AMD', 'ANG', 'AUD', 'AWG', 'AZN', 'BAM', 'BBD', 'BDT', 'BGN', 'BIF', 'BMD', 'BND', 'BSD',
-            'BWP', 'BZD', 'CAD', 'CDF', 'CHF', 'CNY', 'DKK', 'DOP', 'DZD', 'EGP', 'ETB', 'EUR', 'FJD', 'GBP', 'GEL', 'GIP',
-            'GMD', 'GYD', 'HKD', 'HRK', 'HTG', 'IDR', 'ILS', 'ISK', 'JMD', 'JPY', 'KES', 'KGS', 'KHR', 'KMF', 'KRW', 'KYD',
-            'KZT', 'LBP', 'LKR', 'LRD', 'LSL', 'MAD', 'MDL', 'MGA', 'MKD', 'MMK', 'MNT', 'MOP', 'MRO', 'MVR', 'MWK', 'MXN',
-            'MYR', 'MZN', 'NAD', 'NGN', 'NOK', 'NPR', 'NZD', 'PGK', 'PHP', 'PKR', 'PLN', 'QAR', 'RON', 'RSD', 'RUB', 'RWF',
-            'SAR', 'SBD', 'SCR', 'SEK', 'SGD', 'SLL', 'SOS', 'SZL', 'THB', 'TJS', 'TOP', 'TRY', 'TTD', 'TWD', 'TZS', 'UAH',
-            'UGX', 'UZS', 'VND', 'VUV', 'WST', 'XAF', 'XCD', 'YER', 'ZAR', 'INR',
+            'USD', 'AED', 'ANG', 'AOA', 'ARS', 'AUD', 'AWG', 'AZN', 'BAM', 'BBD', 'BDT', 'BGN', 'BMD', 'BND', 'BOB', 'BRL',
+            'BSD', 'BWP', 'BYR', 'BZD', 'CAD', 'CDF', 'CHF', 'CLF', 'CLP', 'CNY', 'COP', 'CRC', 'CVE', 'CZK', 'DKK', 'DOP',
+            'EGP', 'ERN', 'ETB', 'EUR', 'FJD', 'FKP', 'GBP', 'GHS', 'GIP', 'GMD', 'GTQ', 'GYD', 'HKD', 'HNL', 'HRK', 'HUF',
+            'IDR', 'ILS', 'INR', 'ISK', 'JMD', 'JPY', 'KES', 'KGS', 'KRW', 'KYD', 'LBP', 'LKR', 'LRD', 'MAD', 'MDL', 'MKD',
+            'MMK', 'MOP', 'MRO', 'MUR', 'MVR', 'MWK', 'MXN', 'MYR', 'MZN', 'NAD', 'NGN', 'NIO', 'NOK', 'NPR', 'NZD', 'PAB',
+            'PEN', 'PGK', 'PHP', 'PKR', 'PLN', 'QAR', 'RON', 'RSD', 'RUB', 'SAR', 'SBD', 'SEK', 'SGD', 'SHP', 'SLL', 'SOS',
+            'SRD', 'STD', 'SYP', 'THB', 'TJS', 'TOP', 'TRY', 'TTD', 'TWD', 'TZS', 'UAH', 'UGX', 'UYU', 'UZS', 'VEF', 'VND',
+            'WST', 'XAF', 'XCD', 'XOF', 'ZAR', 'ZMK', 'ZWL',
         ];
     }
 
     /**
-     * The list of zero/non-decimal currencies in Stripe.
+     * The list of zero/non-decimal currencies in Chargebee.
      *
-     * {@link https://stripe.com/docs/currencies#zero-decimal}
+     * {@link https://www.chargebee.com/docs/2.0/supported-currencies.html}
      *
      * @return string[]
      */
     public static function get_zero_decimal_currencies(): array {
         return [
-            'BIF', 'CLP', 'DJF', 'GNF', 'JPY', 'KMF', 'KRW', 'MGA', 'PYG', 'RWF', 'UGX', 'VND', 'VUV', 'XAF', 'XOF', 'XPF',
+            'CLP', 'JPY', 'KRW', 'VND',  'XAF', 'XOF',
         ];
     }
 
