@@ -70,10 +70,11 @@ class chargebee_helper {
     /**
      * Initialise the Chargebee API client.
      *
-     * @param string $apikey
      * @param string $sitename
+     * @param string $apikey
+     * @param string $customeridprefix
      */
-    public function __construct(string $sitename, string $apikey, $customeridprefix) {
+    public function __construct(string $sitename, string $apikey, string $customeridprefix) {
         $this->apikey = $apikey;
         $this->sitename = $sitename;
         $this->customeridprefix = $customeridprefix;
