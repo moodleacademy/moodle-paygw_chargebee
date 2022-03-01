@@ -77,7 +77,7 @@ if ($state === $chargebeehelper::STATUS_SUCCEEDED) {
         }
         redirect($url, get_string('paymentsuccessful', 'paygw_chargebee'), 3, 'success');
     }
-    redirect(new moodle_url('/'), get_string('paymentmismatch', 'paygw_chargebee'), 3, 'error');
+    redirect(new moodle_url('/'), get_string('paymentalreadyexists', 'paygw_chargebee'), 3, 'error');
 }
 
 redirect(new moodle_url('/'), get_string('paymentcancelled', 'paygw_chargebee'));

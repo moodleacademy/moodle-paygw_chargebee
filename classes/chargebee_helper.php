@@ -103,7 +103,7 @@ class chargebee_helper {
                 "lastName" => $user->lastname,
             ),
             "charges" => array(array(
-                "amount" => $cost * 100,
+                "amount" => $this->get_unit_amount($cost, $currency),
                 "description" => $description
             ))
         ));
@@ -115,28 +115,30 @@ class chargebee_helper {
     /**
      * Verify this transaction is authentic, and corresponds to current transaction.
      *
-     * @param string $identifier
+     * @param string $identifier unique identifier of the hosted page resource
      * @param  \stdClass $user
-     * @param float $cost
-     * @param string $currency
      * @return bool
      */
-    public function verify_transaction(string $identifier, $user, float $cost, string $currency): bool {
+    public function verify_transaction(string $identifier, $user): bool {
+        global $DB;
+
         // Retrieve hosted page.
-        $result = HostedPage::retrieve($identifier);
-        $hostedpage = $result->hostedPage();
+        $hostedpage = $this->get_hosted_page($identifier);
 
-        $timediff = time() - $hostedpage->content['invoice']['paid_at'];
-
-        // Verify against the following details: status, customer_id, amount, currency, date.
         if (
-            $timediff < 60 &&
             $hostedpage->content['invoice']['status'] === 'paid' &&
-            $hostedpage->content['invoice']['customer_id'] == $this->customeridprefix . $user->id &&
-            $hostedpage->content['invoice']['currency_code'] === $currency &&
-            $hostedpage->content['invoice']['amount_paid'] == ($cost * 100)
+            $hostedpage->content['invoice']['customer_id'] == $this->customeridprefix . $user->id
         ) {
-            return true;
+            // Check if invoice transaction id exists in db already.
+            if (!$record = $DB->get_record(
+                'paygw_chargebee',
+                array(
+                    'transactionid' => $hostedpage->content['invoice']['linked_payments'][0]['txn_id'],
+                    'userid' => $user->id
+                )
+            )) {
+                return true;
+            }
         }
 
         return false;
@@ -176,5 +178,19 @@ class chargebee_helper {
         $record->invoicenumber = $hostedpage->content['invoice']['id'];
 
         $DB->insert_record('paygw_chargebee', $record);
+    }
+
+    /**
+     * Convert the cost into the unit amount accounting for zero-decimal currencies.
+     *
+     * @param float $cost
+     * @param string $currency
+     * @return float
+     */
+    public function get_unit_amount(float $cost, string $currency): float {
+        if (in_array($currency, gateway::get_zero_decimal_currencies())) {
+            return $cost;
+        }
+        return $cost * 100;
     }
 }
