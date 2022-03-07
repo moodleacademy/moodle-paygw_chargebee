@@ -177,6 +177,8 @@ class chargebee_helper {
         $record->customerid = $hostedpage->content['invoice']['customer_id'];
         $record->transactionid = $hostedpage->content['invoice']['linked_payments'][0]['txn_id'];
         $record->invoicenumber = $hostedpage->content['invoice']['id'];
+        $record->amountpaid = $this->get_paid_amount($hostedpage->content['invoice']['amount_paid'],
+            $hostedpage->content['invoice']['currency_code']);
 
         $DB->insert_record('paygw_chargebee', $record);
     }
@@ -193,5 +195,19 @@ class chargebee_helper {
             return $cost;
         }
         return $cost * 100;
+    }
+
+    /**
+     * Convert the amount paid into the decimal amount accounting for zero-decimal currencies.
+     *
+     * @param float $amount
+     * @param string $currency
+     * @return float
+     */
+    public function get_paid_amount(float $amount, string $currency): float {
+        if (in_array($currency, gateway::get_zero_decimal_currencies())) {
+            return $amount;
+        }
+        return $amount / 100;
     }
 }
