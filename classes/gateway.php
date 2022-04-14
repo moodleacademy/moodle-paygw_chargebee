@@ -89,6 +89,10 @@ class gateway extends \core_payment\gateway {
         $mform->addElement('text', 'customeridprefix', get_string('customeridprefix', 'paygw_chargebee'));
         $mform->setType('customeridprefix', PARAM_TEXT);
         $mform->addHelpButton('customeridprefix', 'customeridprefix', 'paygw_chargebee');
+
+        $mform->addElement('text', 'lineitemprefix', get_string('lineitemprefix', 'paygw_chargebee'));
+        $mform->setType('lineitemprefix', PARAM_TEXT);
+        $mform->addHelpButton('lineitemprefix', 'lineitemprefix', 'paygw_chargebee');
     }
 
     /**

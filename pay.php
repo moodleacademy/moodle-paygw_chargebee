@@ -42,6 +42,11 @@ $cost = payment_helper::get_rounded_cost($payable->get_amount(), $payable->get_c
 
 $chargebeehelper = new chargebee_helper($config->sitename, $config->apikey, $config->customeridprefix);
 
+// Add prefix to description.
+if (!empty($config->lineitemprefix)) {
+  $description = $config->lineitemprefix . $description;
+}
+
 $redirecturl = $CFG->wwwroot . '/payment/gateway/chargebee/process.php?component=' . $component . '&paymentarea=' .
   $paymentarea . '&itemid=' . $itemid;
 
