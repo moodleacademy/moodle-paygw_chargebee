@@ -41,3 +41,6 @@ $string['gatewaydescription'] = 'Braintree is an authorised payment gateway prov
 $string['paymentsuccessful'] = 'Payment was successful.';
 $string['paymentcancelled'] = 'Payment was cancelled.';
 $string['paymentalreadyexists'] = 'Error. This transaction was already recorded.';
+$string['privacy:metadata:paygw_chargebee'] = 'Stores the relation from Moodle users to Chargebee customer objects';
+$string['privacy:metadata:paygw_chargebee:userid'] = 'Moodle user ID';
+$string['privacy:metadata:paygw_chargebee:customerid'] = 'Customer ID returned from Chargebee';
