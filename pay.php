@@ -44,7 +44,8 @@ $chargebeehelper = new chargebee_helper($config->sitename, $config->apikey, $con
 
 // Add prefix to description.
 if (!empty($config->lineitemprefix)) {
-  $description = $config->lineitemprefix . $description;
+    // TODO: Add ltr and rtl support?
+    $description = $config->lineitemprefix . ' ' . $description;
 }
 
 $redirecturl = $CFG->wwwroot . '/payment/gateway/chargebee/process.php?component=' . $component . '&paymentarea=' .
