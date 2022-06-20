@@ -78,6 +78,12 @@ if ($state === $chargebeehelper::STATUS_SUCCEEDED) {
         redirect($url, get_string('paymentsuccessful', 'paygw_chargebee'), 3, 'success');
     }
     redirect(new moodle_url('/'), get_string('paymentalreadyexists', 'paygw_chargebee'), 3, 'error');
+} else {
+    // Payment did not succeed.
+    if ($config->autovoidinvoice == '1') {
+        // Void unpaid invoice.
+        $chargebeehelper->void_unpaid_invoice($id, $USER->id);
+    }
 }
 
 redirect(new moodle_url('/'), get_string('paymentcancelled', 'paygw_chargebee'));

@@ -26,6 +26,7 @@ namespace paygw_chargebee;
 
 use ChargeBee\ChargeBee\Environment;
 use ChargeBee\ChargeBee\Models\HostedPage;
+use ChargeBee\ChargeBee\Models\Invoice;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -156,6 +157,33 @@ class chargebee_helper {
         $result = HostedPage::retrieve($identifier);
 
         return $result->hostedPage();
+    }
+
+    /**
+     * Void an unpaid invoice
+     *
+     * @param string $identifier unique identifier of the hosted page resource
+     * @param  int $userid id of the user
+     * @return boolean true of success, false otherwise
+     */
+    public function void_unpaid_invoice(string $identifier, int $userid): bool {
+        // Retrieve hosted page.
+        $hostedpage = $this->get_hosted_page($identifier);
+
+        try {
+            if (
+                $hostedpage->content['invoice']['status'] === 'payment_due' &&
+                $hostedpage->content['invoice']['customer_id'] == $this->customeridprefix . $userid &&
+                $hostedpage->content['invoice']['amount_paid'] == '0'
+            ) {
+                // We have an unpaid invoice, and nothing has been paid yet.
+                Invoice::voidInvoice($hostedpage->content['invoice']['id']);
+                return true;
+            }
+
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 
     /**

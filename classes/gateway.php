@@ -93,6 +93,10 @@ class gateway extends \core_payment\gateway {
         $mform->addElement('text', 'lineitemprefix', get_string('lineitemprefix', 'paygw_chargebee'));
         $mform->setType('lineitemprefix', PARAM_TEXT);
         $mform->addHelpButton('lineitemprefix', 'lineitemprefix', 'paygw_chargebee');
+
+        $mform->addElement('selectyesno', 'autovoidinvoice', get_string('autovoidinvoice', 'paygw_chargebee'));
+        $mform->setType('autovoidinvoice', PARAM_INT);
+        $mform->addHelpButton('autovoidinvoice', 'autovoidinvoice', 'paygw_chargebee');
     }
 
     /**
