@@ -2,7 +2,7 @@
 
 Provides a payment gateway with Chargebee in Moodle.
 
-You will need an account on Chargebee.com and connect to payment providers such as Braintree, Paypal, Stripe ,etc.
+You will need an account on Chargebee.com and connect to payment providers such as Braintree, Paypal, Stripe, etc.
 
 ## Installing via uploaded ZIP file ##
 
