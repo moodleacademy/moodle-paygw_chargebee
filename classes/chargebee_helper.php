@@ -194,7 +194,7 @@ class chargebee_helper {
      * @param integer $paymentid id from payments table
      * @return void
      */
-    public function save_transaction_details(string $identifier, int $userid, int $paymentid) {
+    public function save_transaction_details(string $identifier, int $userid, int $paymentid): void {
         global $DB;
 
         $hostedpage = $this->get_hosted_page($identifier);
