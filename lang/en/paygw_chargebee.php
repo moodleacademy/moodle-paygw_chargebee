@@ -43,6 +43,7 @@ $string['gatewaydescription'] = 'Chargebee payment gateway allows processing of 
 $string['paymentsuccessful'] = 'Payment was successful.';
 $string['paymentcancelled'] = 'Payment was cancelled.';
 $string['paymentalreadyexists'] = 'Error. This transaction was already recorded.';
+$string['transactionfailed'] = 'Error. This transaction could not be completed.';
 $string['privacy:metadata:paygw_chargebee'] = 'Stores the relation from Moodle users to Chargebee customer objects';
 $string['privacy:metadata:paygw_chargebee:userid'] = 'Moodle user ID';
 $string['privacy:metadata:paygw_chargebee:customerid'] = 'Customer ID returned from Chargebee';

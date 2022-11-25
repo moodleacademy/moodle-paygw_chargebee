@@ -75,15 +75,49 @@ if ($state === $chargebeehelper::STATUS_SUCCEEDED) {
                 $url = course_get_url($courseid);
             }
         }
+
+        // TODO: Add to logs.
+        // Payment transaction successful.
+        // Payment transaction completed.
         redirect($url, get_string('paymentsuccessful', 'paygw_chargebee'), 3, 'success');
+    } else {
+        // Transaction cannot be verified
+        // Payment did not succeed.
+        // TODO: Add to logs.
+        // Payment transaction failed.
+        if ($config->autovoidinvoice == '1') {
+            // Void unpaid invoice.
+            if ($chargebeehelper->void_unpaid_invoice($id, $USER->id)) {
+                // TODO: Add to logs.
+                // Invoice voided successfully.
+            } else {
+                // TODO: Add to logs.
+                // Invoice voided failure.
+            }
+        }
+        // TODO: Add to logs.
+        // Payment transaction completed.
     }
-    redirect(new moodle_url('/'), get_string('paymentalreadyexists', 'paygw_chargebee'), 3, 'error');
+
+    // TODO: Add to logs.
+    // Payment transaction completed.
+    redirect(new moodle_url('/'), get_string('transactionfailed', 'paygw_chargebee'), 3, 'error');
 } else {
     // Payment did not succeed.
     if ($config->autovoidinvoice == '1') {
         // Void unpaid invoice.
         $chargebeehelper->void_unpaid_invoice($id, $USER->id);
+
+        // TODO: Add to logs.
+        // Payment transaction failed.
+        // Invoice voided.
+        // Payment transaction completed.
     }
+}
+
+if ($state === $chargebeehelper::STATUS_CANCELLED) {
+    // TODO: Add to logs.
+    // Transaction cancelled.
 }
 
 redirect(new moodle_url('/'), get_string('paymentcancelled', 'paygw_chargebee'));
