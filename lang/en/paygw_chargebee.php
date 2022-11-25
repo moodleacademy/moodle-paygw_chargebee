@@ -47,3 +47,5 @@ $string['transactionfailed'] = 'Error. This transaction could not be completed.'
 $string['privacy:metadata:paygw_chargebee'] = 'Stores the relation from Moodle users to Chargebee customer objects';
 $string['privacy:metadata:paygw_chargebee:userid'] = 'Moodle user ID';
 $string['privacy:metadata:paygw_chargebee:customerid'] = 'Customer ID returned from Chargebee';
+$string['commentvoidinvoice'] = 'Automatically voided because payment declined.';
+
