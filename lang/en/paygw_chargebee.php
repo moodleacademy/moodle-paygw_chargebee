@@ -27,7 +27,7 @@ defined('MOODLE_INTERNAL') || die();
 
 $string['pluginname'] = 'Chargebee';
 $string['pluginname_desc'] = 'The Chargebee plugin allows you to receive payments via Chargebee with Braintree.';
-$string['apikey'] = 'API Key';
+$string['apikey'] = 'API key';
 $string['apikey_help'] = 'The API key that we use to identify ourselves with Chargebee';
 $string['sitename'] = 'Site name';
 $string['sitename_help'] = 'Chargebee site name';
@@ -37,7 +37,7 @@ $string['lineitemprefix'] = 'Invoice item prefix';
 $string['lineitemprefix_help'] = 'Prefix to use for items in the invoice';
 $string['autovoidinvoice'] = 'Void unpaid invoice';
 $string['autovoidinvoice_help'] = 'Automatically void unpaid invoices, if payment has failed';
-$string['paymentmethods'] = 'Payment Methods';
+$string['paymentmethods'] = 'Payment methods';
 $string['gatewayname'] = 'Chargebee';
 $string['gatewaydescription'] = 'Chargebee payment gateway allows processing of credit card and PayPal transactions.';
 $string['paymentsuccessful'] = 'Payment was successful.';
