@@ -60,7 +60,7 @@ if ($state === $chargebeehelper::STATUS_SUCCEEDED) {
         );
 
         // Record Chargebee transaction details.
-        $chargebeehelper->save_transaction_details($id, $USER->id, $paymentid);
+        $invoicenumber = $chargebeehelper->save_transaction_details($id, $USER->id, $paymentid);
 
         payment_helper::deliver_order($component, $paymentarea, $itemid, $paymentid, $USER->id);
 
@@ -76,48 +76,119 @@ if ($state === $chargebeehelper::STATUS_SUCCEEDED) {
             }
         }
 
-        // TODO: Add to logs.
-        // Payment transaction successful.
-        // Payment transaction completed.
+        // Log events.
+        // Transaction successful.
+        $chargebeehelper->log_event(CHARGEBEE_TRANSACTION_SUCCESSFUL, 
+            [
+                'component' => $component, 
+                'paymentarea' => $paymentarea, 
+                'itemid' => $itemid,
+                'invoice' => $invoicenumber,
+                'paymentid' => $paymentid,
+            ]
+        );
+
+        // Transaction complete.
+        $chargebeehelper->log_event(CHARGEBEE_TRANSACTION_COMPLETED, 
+            [
+                'component' => $component, 
+                'paymentarea' => $paymentarea, 
+                'itemid' => $itemid, 
+            ]
+        );
+        
         redirect($url, get_string('paymentsuccessful', 'paygw_chargebee'), 3, 'success');
+        die;
     } else {
-        // Transaction cannot be verified
-        // Payment did not succeed.
-        // TODO: Add to logs.
-        // Payment transaction failed.
+        // Payment did not succeed. Transaction cannot be verified.
+        // Log event.
+        $chargebeehelper->log_event(CHARGEBEE_TRANSACTION_FAILED, 
+            [
+                'component' => $component, 
+                'paymentarea' => $paymentarea, 
+                'itemid' => $itemid,
+                'failurereason' => get_string('errtransactionverificationfailed', 'paygw_chargebee'),
+            ]
+        );
         if ($config->autovoidinvoice == '1') {
             // Void unpaid invoice.
             if ($chargebeehelper->void_unpaid_invoice($id, $USER->id)) {
-                // TODO: Add to logs.
-                // Invoice voided successfully.
+                // Log event.
+                $chargebeehelper->log_event(CHARGEBEE_VOID_INVOICE_SUCCESSFUL, 
+                    [
+                        'component' => $component, 
+                        'paymentarea' => $paymentarea, 
+                        'itemid' => $itemid,
+                    ]
+                );
             } else {
-                // TODO: Add to logs.
-                // Invoice voided failure.
+                // Log event.
+                $chargebeehelper->log_event(CHARGEBEE_VOID_INVOICE_FAILED, 
+                    [
+                        'component' => $component, 
+                        'paymentarea' => $paymentarea, 
+                        'itemid' => $itemid,
+                    ]
+                );
             }
         }
-        // TODO: Add to logs.
-        // Payment transaction completed.
     }
 
-    // TODO: Add to logs.
-    // Payment transaction completed.
+    // Log event.
+    // Transaction process complete.
+    $chargebeehelper->log_event(CHARGEBEE_TRANSACTION_COMPLETED, 
+        [
+            'component' => $component, 
+            'paymentarea' => $paymentarea, 
+            'itemid' => $itemid, 
+        ]
+    );
     redirect(new moodle_url('/'), get_string('transactionfailed', 'paygw_chargebee'), 3, 'error');
 } else {
     // Payment did not succeed.
+    $chargebeehelper->log_event(CHARGEBEE_TRANSACTION_FAILED, 
+        [
+            'component' => $component, 
+            'paymentarea' => $paymentarea, 
+            'itemid' => $itemid,
+            'failurereason' => get_string('errchargebeeerrorstatus', 'paygw_chargebee', $state),
+        ]
+    );
+
     if ($config->autovoidinvoice == '1') {
         // Void unpaid invoice.
-        $chargebeehelper->void_unpaid_invoice($id, $USER->id);
+        if ($chargebeehelper->void_unpaid_invoice($id, $USER->id)) {
+            // Log event.
+            $chargebeehelper->log_event(CHARGEBEE_VOID_INVOICE_SUCCESSFUL, 
+                [
+                    'component' => $component, 
+                    'paymentarea' => $paymentarea, 
+                    'itemid' => $itemid,
+                ]
+            );
+        }
 
-        // TODO: Add to logs.
-        // Payment transaction failed.
-        // Invoice voided.
-        // Payment transaction completed.
+        // Log event.
+        // Transaction process complete.
+        $chargebeehelper->log_event(CHARGEBEE_TRANSACTION_COMPLETED, 
+            [
+                'component' => $component, 
+                'paymentarea' => $paymentarea, 
+                'itemid' => $itemid, 
+            ]
+        );
     }
 }
 
 if ($state === $chargebeehelper::STATUS_CANCELLED) {
-    // TODO: Add to logs.
-    // Transaction cancelled.
+    // Transaction process cancelled.
+    $chargebeehelper->log_event(CHARGEBEE_TRANSACTION_CANCELLED, 
+        [
+            'component' => $component, 
+            'paymentarea' => $paymentarea, 
+            'itemid' => $itemid, 
+        ]
+    );
 }
 
 redirect(new moodle_url('/'), get_string('paymentcancelled', 'paygw_chargebee'));

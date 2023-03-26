@@ -27,10 +27,21 @@ namespace paygw_chargebee;
 use ChargeBee\ChargeBee\Environment;
 use ChargeBee\ChargeBee\Models\HostedPage;
 use ChargeBee\ChargeBee\Models\Invoice;
+use context_module;
+use context_course;
 
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/payment/gateway/chargebee/.extlib/autoload.php');
+
+// Event names.
+define('CHARGEBEE_TRANSACTION_STARTED', 'transaction_started');
+define('CHARGEBEE_TRANSACTION_SUCCESSFUL', 'transaction_successful');
+define('CHARGEBEE_TRANSACTION_FAILED', 'transaction_failed');
+define('CHARGEBEE_TRANSACTION_COMPLETED', 'transaction_completed');
+define('CHARGEBEE_TRANSACTION_CANCELLED', 'transaction_cancelled');
+define('CHARGEBEE_VOID_INVOICE_SUCCESSFUL', 'void_invoice_successful');
+define('CHARGEBEE_VOID_INVOICE_FAILED', 'void_invoice_failed');
 
 /**
  * The helper class for Chargebee payment gateway.
@@ -192,9 +203,9 @@ class chargebee_helper {
      * @param string $identifier unique identifier of the hosted page resource
      * @param integer $userid id of the user
      * @param integer $paymentid id from payments table
-     * @return void
+     * @return string return the invoice number
      */
-    public function save_transaction_details(string $identifier, int $userid, int $paymentid): void {
+    public function save_transaction_details(string $identifier, int $userid, int $paymentid): string {
         global $DB;
 
         $hostedpage = $this->get_hosted_page($identifier);
@@ -209,6 +220,8 @@ class chargebee_helper {
             $hostedpage->content['invoice']['currency_code']);
 
         $DB->insert_record('paygw_chargebee', $record);
+
+        return $record->invoicenumber;
     }
 
     /**
@@ -237,5 +250,85 @@ class chargebee_helper {
             return $amount;
         }
         return $amount / 100;
+    }
+
+    /**
+     * Build an array of event data
+     */
+    public function build_event_data($data) {
+        global $DB, $USER;
+
+        if ($data['component'] == 'enrol_fee' && $data['paymentarea'] == 'fee') {
+            $courseid = $DB->get_field('enrol', 'courseid', ['enrol' => 'fee', 'id' => $data['itemid']]);
+            if (!empty($courseid)) {
+                $url = course_get_url($courseid);
+            }
+            $context = context_course::instance($courseid);
+        }
+        else {
+            $context = context_module::instance($data['itemid']);
+        }
+
+        $other = [
+            'itemid' => $data['itemid'],
+            'component' => $data['component'],
+        ];
+
+        if (isset($data['paymentid'])) {
+            $other['paymentid'] = $data['paymentid'];
+        }
+
+        if (isset($data['invoice'])) {
+            $other['invoice'] = $data['invoice'];
+        }
+
+        if (isset($data['failurereason'])) {
+            $other['failurereason'] = $data['failurereason'];
+        }
+ 
+        $eventdata = [
+            'context' => $context,
+            'relateduserid' => $USER->id,
+            'other' => $other,
+        ];
+
+        return $eventdata;
+    }
+
+    /**
+     * Log the event
+     */
+    public function log_event($eventtype, $data) {
+        $eventdata = $this->build_event_data($data);
+        
+        // TODO: This can be simplified??
+        switch ($eventtype) {
+            case CHARGEBEE_TRANSACTION_STARTED:
+                $event = \paygw_chargebee\event\transaction_started::create($eventdata);
+                break;
+            case CHARGEBEE_TRANSACTION_COMPLETED:
+                $event = \paygw_chargebee\event\transaction_completed::create($eventdata);
+                break;
+            case CHARGEBEE_TRANSACTION_SUCCESSFUL:
+                $event = \paygw_chargebee\event\transaction_successful::create($eventdata);
+                break;
+            case CHARGEBEE_TRANSACTION_FAILED:
+                $event = \paygw_chargebee\event\transaction_failed::create($eventdata);
+                break;
+            case CHARGEBEE_VOID_INVOICE_SUCCESSFUL:
+                $event = \paygw_chargebee\event\void_invoice_successful::create($eventdata);
+                break;
+            case CHARGEBEE_VOID_INVOICE_FAILED:
+                $event = \paygw_chargebee\event\void_invoice_failed::create($eventdata);
+                break;
+            case CHARGEBEE_TRANSACTION_CANCELLED:
+                $event = \paygw_chargebee\event\transaction_cancelled::create($eventdata);
+                break;
+            default:
+                return;
+            break;
+        }
+     
+        $event->trigger();
     }
 }

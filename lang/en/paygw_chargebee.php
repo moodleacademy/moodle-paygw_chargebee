@@ -48,4 +48,12 @@ $string['privacy:metadata:paygw_chargebee'] = 'Stores the relation from Moodle u
 $string['privacy:metadata:paygw_chargebee:userid'] = 'Moodle user ID';
 $string['privacy:metadata:paygw_chargebee:customerid'] = 'Customer ID returned from Chargebee';
 $string['commentvoidinvoice'] = 'Automatically voided because payment declined.';
-
+$string['eventtransactionstarted'] = 'Payment transaction started';
+$string['eventtransactioncompleted'] = 'Payment transaction completed';
+$string['eventtransactionsuccessful'] = 'Payment transaction successful';
+$string['eventtransactionfailed'] = 'Payment transaction failed';
+$string['eventtransactioncancelled'] = 'Payment transaction cancelled';
+$string['eventvoidinvoicesuccessful'] = 'Void unpaid invoice successful';
+$string['eventvoidinvoicefailed'] = 'Void unpaid invoice failed';
+$string['errtransactionverificationfailed'] = 'Transaction verification failed';
+$string['errchargebeeerrorstatus'] = 'Chargebee error status: {$a}';
