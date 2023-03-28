@@ -54,10 +54,10 @@ $redirecturl = $CFG->wwwroot . '/payment/gateway/chargebee/process.php?component
 $checkouturl = $chargebeehelper->get_checkout_url($USER, $cost, $payable->get_currency(), $description, $redirecturl);
 
 // Log event
-$chargebeehelper->log_event(CHARGEBEE_TRANSACTION_STARTED, 
+$chargebeehelper->log_event(CHARGEBEE_TRANSACTION_STARTED,
     [
-        'component' => $component, 
-        'paymentarea' => $paymentarea, 
+        'component' => $component,
+        'paymentarea' => $paymentarea,
         'itemid' => $itemid,
     ]
 );

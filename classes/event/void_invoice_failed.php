@@ -80,6 +80,6 @@ class void_invoice_failed extends \core\event\base {
         }
         if (!isset($this->other['component'])) {
             throw new \coding_exception('The \'component\' value must be set in other.');
-        }   
+        }
     }
 }

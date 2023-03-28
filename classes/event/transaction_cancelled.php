@@ -66,7 +66,7 @@ class transaction_cancelled extends \core\event\base {
     public function get_url() {
         return new \moodle_url('/course/view.php', array('id' => $this->courseid));
     }
-    
+
     /**
      * Custom validation.
      *

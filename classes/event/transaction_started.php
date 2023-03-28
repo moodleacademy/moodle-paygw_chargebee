@@ -67,7 +67,7 @@ class transaction_started extends \core\event\base {
         return new \moodle_url('/course/view.php', array('id' => $this->courseid));
     }
 
-    
+
     /**
      * Custom validation.
      *

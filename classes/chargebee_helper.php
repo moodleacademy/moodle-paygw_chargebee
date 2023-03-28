@@ -285,7 +285,7 @@ class chargebee_helper {
         if (isset($data['failurereason'])) {
             $other['failurereason'] = $data['failurereason'];
         }
- 
+
         $eventdata = [
             'context' => $context,
             'relateduserid' => $USER->id,
@@ -300,7 +300,7 @@ class chargebee_helper {
      */
     public function log_event($eventtype, $data) {
         $eventdata = $this->build_event_data($data);
-        
+
         // TODO: This can be simplified??
         switch ($eventtype) {
             case CHARGEBEE_TRANSACTION_STARTED:
@@ -328,7 +328,7 @@ class chargebee_helper {
                 return;
             break;
         }
-     
+
         $event->trigger();
     }
 }
