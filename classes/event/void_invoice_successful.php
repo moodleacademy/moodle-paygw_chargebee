@@ -64,6 +64,10 @@ class void_invoice_successful extends \core\event\base {
      * @return \moodle_url
      */
     public function get_url() {
+        if ($this->courseid < 1) {
+            return null;
+        }
+
         return new \moodle_url('/course/view.php', array('id' => $this->courseid));
     }
 

@@ -29,6 +29,7 @@ use ChargeBee\ChargeBee\Models\HostedPage;
 use ChargeBee\ChargeBee\Models\Invoice;
 use context_module;
 use context_course;
+use context_block;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -258,15 +259,13 @@ class chargebee_helper {
     public function build_event_data($data) {
         global $DB, $USER;
 
-        if ($data['component'] == 'enrol_fee' && $data['paymentarea'] == 'fee') {
+        if ($data['component'] == 'enrol_fee' && $data['paymentarea'] == 'fee') { // Course enrollment.
             $courseid = $DB->get_field('enrol', 'courseid', ['enrol' => 'fee', 'id' => $data['itemid']]);
-            if (!empty($courseid)) {
-                $url = course_get_url($courseid);
-            }
             $context = context_course::instance($courseid);
-        }
-        else {
-            $context = context_module::instance($data['itemid']);
+        } else if (substr($data['component'], 0, 6) == 'block_') { // Block-level payment.
+            $context = context_block::instance($data['itemid']);
+        } else {
+            $context = context_module::instance($data['itemid']); // Activity-level payment.
         }
 
         $other = [
