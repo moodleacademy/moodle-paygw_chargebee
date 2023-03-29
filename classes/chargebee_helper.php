@@ -189,7 +189,10 @@ class chargebee_helper {
                 $hostedpage->content['invoice']['amount_paid'] == '0'
             ) {
                 // We have an unpaid invoice, and nothing has been paid yet.
-                Invoice::voidInvoice($hostedpage->content['invoice']['id'], ['comment' => get_string('commentvoidinvoice', 'paygw_chargebee')]);
+                Invoice::voidInvoice(
+                    $hostedpage->content['invoice']['id'],
+                    ['comment' => get_string('commentvoidinvoice', 'paygw_chargebee')]
+                );
                 return true;
             }
 

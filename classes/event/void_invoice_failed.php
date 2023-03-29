@@ -24,8 +24,6 @@
 
 namespace paygw_chargebee\event;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * @copyright  2023 Rajneel Totaram <rajneel.totaram@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -55,7 +53,8 @@ class void_invoice_failed extends \core\event\base {
      * @return string
      */
     public function get_description() {
-        return "The unpaid invoice for user with id '$this->userid' could not be voided for '{$this->other['component']}' with itemid '{$this->other['itemid']}'.";
+        return "The unpaid invoice for user with id '$this->userid' could not be voided for '{$this->other['component']}'
+            with itemid '{$this->other['itemid']}'.";
     }
 
     /**

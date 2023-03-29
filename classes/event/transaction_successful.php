@@ -24,8 +24,6 @@
 
 namespace paygw_chargebee\event;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * @copyright  2023 Rajneel Totaram <rajneel.totaram@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -55,7 +53,9 @@ class transaction_successful extends \core\event\base {
      * @return string
      */
     public function get_description() {
-        return "The user with id '$this->userid' completed a successful payment for '{$this->other['component']}' with itemid '{$this->other['itemid']}'. The payment id is '{$this->other['paymentid']}' and invoice number is '{$this->other['invoice']}'.";
+        return "The user with id '$this->userid' completed a successful payment for '{$this->other['component']}'
+            with itemid '{$this->other['itemid']}'. The payment id is '{$this->other['paymentid']}'
+            and invoice number is '{$this->other['invoice']}'.";
     }
 
     /**
