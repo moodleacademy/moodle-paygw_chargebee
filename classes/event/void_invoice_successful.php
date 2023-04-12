@@ -55,7 +55,7 @@ class void_invoice_successful extends \core\event\base {
     public function get_description() {
         $inv = (isset($this->other['invoice'])) ? $this->other['invoice'] : '';
 
-        return "The unpaid invoice $inv for user with id '$this->userid' was voided successfully for'{$this->other['component']}'
+        return "The unpaid invoice $inv for user with id '$this->userid' was voided successfully for '{$this->other['component']}'
             with itemid '{$this->other['itemid']}'.";
     }
 
