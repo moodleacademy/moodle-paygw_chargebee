@@ -53,7 +53,9 @@ class void_invoice_failed extends \core\event\base {
      * @return string
      */
     public function get_description() {
-        return "The unpaid invoice for user with id '$this->userid' could not be voided for '{$this->other['component']}'
+        $inv = (isset($this->other['invoice'])) ? $this->other['invoice'] : '';
+
+        return "The unpaid invoice $inv for user with id '$this->userid' could not be voided for '{$this->other['component']}'
             with itemid '{$this->other['itemid']}'.";
     }
 

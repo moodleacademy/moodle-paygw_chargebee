@@ -110,15 +110,18 @@ if ($state === $chargebeehelper::STATUS_SUCCEEDED) {
                 'failurereason' => get_string('errtransactionverificationfailed', 'paygw_chargebee'),
             ]
         );
+
         if ($config->autovoidinvoice == '1') {
             // Void unpaid invoice.
-            if ($chargebeehelper->void_unpaid_invoice($id, $USER->id)) {
+            $chargebeeresult = $chargebeehelper->void_unpaid_invoice($id, $USER->id);
+            if ($chargebeeresult['status'] == 'voided') {
                 // Log event.
                 $chargebeehelper->log_event(CHARGEBEE_VOID_INVOICE_SUCCESSFUL,
                     [
                         'component' => $component,
                         'paymentarea' => $paymentarea,
                         'itemid' => $itemid,
+                        'invoice' => $chargebeeresult['invoice'],
                     ]
                 );
             } else {
@@ -128,6 +131,7 @@ if ($state === $chargebeehelper::STATUS_SUCCEEDED) {
                         'component' => $component,
                         'paymentarea' => $paymentarea,
                         'itemid' => $itemid,
+                        'invoice' => $chargebeeresult['invoice'],
                     ]
                 );
             }
@@ -157,13 +161,15 @@ if ($state === $chargebeehelper::STATUS_SUCCEEDED) {
 
     if ($config->autovoidinvoice == '1') {
         // Void unpaid invoice.
-        if ($chargebeehelper->void_unpaid_invoice($id, $USER->id)) {
+        $chargebeeresult = $chargebeehelper->void_unpaid_invoice($id, $USER->id);
+        if ($chargebeeresult['status'] == 'voided') {
             // Log event.
             $chargebeehelper->log_event(CHARGEBEE_VOID_INVOICE_SUCCESSFUL,
                 [
                     'component' => $component,
                     'paymentarea' => $paymentarea,
                     'itemid' => $itemid,
+                    'invoice' => $chargebeeresult['invoice'],
                 ]
             );
         }

@@ -176,9 +176,9 @@ class chargebee_helper {
      *
      * @param string $identifier unique identifier of the hosted page resource
      * @param  int $userid id of the user
-     * @return boolean true of success, false otherwise
+     * @return mixed Array with invoice id and invoice status [voided, payment_due, paid]
      */
-    public function void_unpaid_invoice(string $identifier, int $userid): bool {
+    public function void_unpaid_invoice(string $identifier, int $userid): array {
         // Retrieve hosted page.
         $hostedpage = $this->get_hosted_page($identifier);
 
@@ -189,15 +189,18 @@ class chargebee_helper {
                 $hostedpage->content['invoice']['amount_paid'] == '0'
             ) {
                 // We have an unpaid invoice, and nothing has been paid yet.
-                Invoice::voidInvoice(
+                $result = Invoice::voidInvoice(
                     $hostedpage->content['invoice']['id'],
                     ['comment' => get_string('commentvoidinvoice', 'paygw_chargebee')]
                 );
-                return true;
+
+                $invoice = $result->invoice();
+
+                return ['invoice' => $invoice->id, 'status' => $invoice->status];
             }
 
         } catch (\Exception $e) {
-            return false;
+            return ['invoice' => '', 'status' => '']; // Just return empty values.
         }
     }
 

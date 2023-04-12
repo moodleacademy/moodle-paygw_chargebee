@@ -53,7 +53,9 @@ class void_invoice_successful extends \core\event\base {
      * @return string
      */
     public function get_description() {
-        return "The unpaid invoice for user with id '$this->userid' was voided successfully for'{$this->other['component']}'
+        $inv = (isset($this->other['invoice'])) ? $this->other['invoice'] : '';
+
+        return "The unpaid invoice $inv for user with id '$this->userid' was voided successfully for'{$this->other['component']}'
             with itemid '{$this->other['itemid']}'.";
     }
 
@@ -83,6 +85,9 @@ class void_invoice_successful extends \core\event\base {
         }
         if (!isset($this->other['component'])) {
             throw new \coding_exception('The \'component\' value must be set in other.');
+        }
+        if (!isset($this->other['invoice'])) {
+            throw new \coding_exception('The \'invoice\' value must be set in other.');
         }
     }
 }
