@@ -46,7 +46,7 @@ if ($state === $chargebeehelper::STATUS_SUCCEEDED) {
     $cost = payment_helper::get_rounded_cost($payable->get_amount(), $payable->get_currency(), $surcharge);
 
     // Verify transaction.
-    if ($chargebeehelper->verify_transaction($id, $USER, $cost, $payable->get_currency())) {
+    if ($chargebeehelper->verify_transaction($id, $USER->id)) {
         // Now proceed to save payment details in Moodle.
         $paymentid = payment_helper::save_payment(
             $payable->get_account_id(),

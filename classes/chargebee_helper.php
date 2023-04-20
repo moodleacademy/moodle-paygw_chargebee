@@ -130,10 +130,10 @@ class chargebee_helper {
      * Verify this transaction is authentic, and corresponds to current transaction.
      *
      * @param string $identifier unique identifier of the hosted page resource
-     * @param  \stdClass $user
+     * @param  int $userid id of the user
      * @return bool
      */
-    public function verify_transaction(string $identifier, $user): bool {
+    public function verify_transaction(string $identifier, int $userid): bool {
         global $DB;
 
         // Retrieve hosted page.
@@ -141,14 +141,14 @@ class chargebee_helper {
 
         if (
             $hostedpage->content['invoice']['status'] === 'paid' &&
-            $hostedpage->content['invoice']['customer_id'] == $this->customeridprefix . $user->id
+            $hostedpage->content['invoice']['customer_id'] == $this->customeridprefix . $userid
         ) {
             // Check if invoice transaction id exists in db already.
             if (!$record = $DB->get_record(
                 'paygw_chargebee',
                 array(
                     'transactionid' => $hostedpage->content['invoice']['linked_payments'][0]['txn_id'],
-                    'userid' => $user->id
+                    'userid' => $userid
                 )
             )) {
                 return true;
