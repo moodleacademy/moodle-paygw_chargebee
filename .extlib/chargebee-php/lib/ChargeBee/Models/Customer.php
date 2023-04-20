@@ -34,11 +34,13 @@ class Customer extends Model
     'updatedAt',
     'locale',
     'billingDate',
+    'billingMonth',
     'billingDateMode',
     'billingDayOfWeek',
     'billingDayOfWeekMode',
     'piiCleared',
     'autoCloseInvoices',
+    'channel',
     'cardStatus',
     'fraudFlag',
     'primaryPaymentSourceId',
@@ -48,12 +50,16 @@ class Customer extends Model
     'contacts',
     'paymentMethod',
     'invoiceNotes',
+    'businessEntityId',
     'preferredCurrencyCode',
     'promotionalCredits',
     'unbilledCharges',
     'refundableCredits',
     'excessPayments',
     'balances',
+    'entityIdentifiers',
+    'isEinvoiceEnabled',
+    'einvoicingMethod',
     'metaData',
     'deleted',
     'registeredForGst',
@@ -66,6 +72,8 @@ class Customer extends Model
     'parentAccountAccess',
     'childAccountAccess',
     'vatNumberPrefix',
+    'entityIdentifierScheme',
+    'entityIdentifierStandard',
   ];
 
 
@@ -188,7 +196,7 @@ class Customer extends Model
     return Request::send(Request::POST, Util::encodeURIPath("customers",$id,"delete_relationship"), array(), $env, $headers);
   }
 
-  public static function hierarchy($id, $params = array(), $env = null, $headers = array())
+  public static function hierarchy($id, $params, $env = null, $headers = array())
   {
     return Request::send(Request::GET, Util::encodeURIPath("customers",$id,"hierarchy"), $params, $env, $headers);
   }

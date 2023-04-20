@@ -29,7 +29,8 @@ class Result
 			'coupons' => Models\SubscriptionCoupon::class, 
 			'shipping_address' => Models\SubscriptionShippingAddress::class, 
 			'referral_info' => Models\SubscriptionReferralInfo::class, 
-			'contract_term' => Models\SubscriptionContractTerm::class
+			'contract_term' => Models\SubscriptionContractTerm::class, 
+			'discounts' => Models\SubscriptionDiscount::class
 		));
         return $subscription;
     }
@@ -38,6 +39,12 @@ class Result
     {
         $contract_term = $this->_get('contract_term', Models\ContractTerm::class);
         return $contract_term;
+    }
+
+    public function discount() 
+    {
+        $discount = $this->_get('discount', Models\Discount::class);
+        return $discount;
     }
 
     public function advanceInvoiceSchedule() 
@@ -59,6 +66,7 @@ class Result
 			'contacts' => Models\CustomerContact::class, 
 			'payment_method' => Models\CustomerPaymentMethod::class, 
 			'balances' => Models\CustomerBalance::class, 
+			'entity_identifiers' => Models\CustomerEntityIdentifier::class, 
 			'relationship' => Models\CustomerRelationship::class, 
 			'parent_account_access' => Models\CustomerParentAccountAccess::class, 
 			'child_account_access' => Models\CustomerChildAccountAccess::class
@@ -91,7 +99,9 @@ class Result
 			'card' => Models\PaymentSourceCard::class, 
 			'bank_account' => Models\PaymentSourceBankAccount::class, 
 			'amazon_payment' => Models\PaymentSourceAmazonPayment::class, 
-			'paypal' => Models\PaymentSourcePaypal::class
+			'upi' => Models\PaymentSourceUpi::class, 
+			'paypal' => Models\PaymentSourcePaypal::class, 
+			'mandates' => Models\PaymentSourceMandate::class
 		));
         return $payment_source;
     }
@@ -138,7 +148,8 @@ class Result
 			'linked_orders' => Models\InvoiceLinkedOrder::class, 
 			'notes' => Models\InvoiceNote::class, 
 			'shipping_address' => Models\InvoiceShippingAddress::class, 
-			'billing_address' => Models\InvoiceBillingAddress::class
+			'billing_address' => Models\InvoiceBillingAddress::class, 
+			'einvoice' => Models\InvoiceEinvoice::class
 		));
         return $invoice;
     }
@@ -153,6 +164,7 @@ class Result
     {
         $credit_note = $this->_get('credit_note', Models\CreditNote::class, 
         array( 
+			'einvoice' => Models\CreditNoteEinvoice::class, 
 			'line_items' => Models\CreditNoteLineItem::class, 
 			'discounts' => Models\CreditNoteDiscount::class, 
 			'line_item_discounts' => Models\CreditNoteLineItemDiscount::class, 
@@ -160,7 +172,9 @@ class Result
 			'taxes' => Models\CreditNoteTax::class, 
 			'line_item_taxes' => Models\CreditNoteLineItemTax::class, 
 			'linked_refunds' => Models\CreditNoteLinkedRefund::class, 
-			'allocations' => Models\CreditNoteAllocation::class
+			'allocations' => Models\CreditNoteAllocation::class, 
+			'shipping_address' => Models\CreditNoteShippingAddress::class, 
+			'billing_address' => Models\CreditNoteBillingAddress::class
 		));
         return $credit_note;
     }
@@ -223,6 +237,7 @@ class Result
         $estimate = $this->_get('estimate', Models\Estimate::class, array(),
         array( 
 			'subscription_estimate' => Models\SubscriptionEstimate::class, 
+			'subscription_estimates' => Models\SubscriptionEstimate::class, 
 			'invoice_estimate' => Models\InvoiceEstimate::class, 
 			'invoice_estimates' => Models\InvoiceEstimate::class, 
 			'next_invoice_estimate' => Models\InvoiceEstimate::class, 
@@ -251,6 +266,11 @@ class Result
 			'line_item_taxes' => Models\InvoiceEstimateLineItemTax::class, 
 			'line_item_tiers' => Models\InvoiceEstimateLineItemTier::class, 
 			'line_item_discounts' => Models\InvoiceEstimateLineItemDiscount::class
+		));
+        $estimate->_initDependantList($this->_response['estimate'], 'subscription_estimates', 
+        array( 
+			'shipping_address' => Models\SubscriptionEstimateShippingAddress::class, 
+			'contract_term' => Models\SubscriptionEstimateContractTerm::class
 		));
         $estimate->_initDependantList($this->_response['estimate'], 'invoice_estimates', 
         array( 
@@ -496,6 +516,66 @@ class Result
         return $differential_price;
     }
 
+    public function feature() 
+    {
+        $feature = $this->_get('feature', Models\Feature::class, 
+        array( 
+			'levels' => Models\FeatureLevel::class
+		));
+        return $feature;
+    }
+
+    public function impactedSubscription() 
+    {
+        $impacted_subscription = $this->_get('impacted_subscription', Models\ImpactedSubscription::class, 
+        array( 
+			'download' => Models\ImpactedSubscriptionDownload::class
+		));
+        return $impacted_subscription;
+    }
+
+    public function impactedItem() 
+    {
+        $impacted_item = $this->_get('impacted_item', Models\ImpactedItem::class, 
+        array( 
+			'download' => Models\ImpactedItemDownload::class
+		));
+        return $impacted_item;
+    }
+
+    public function subscriptionEntitlement() 
+    {
+        $subscription_entitlement = $this->_get('subscription_entitlement', Models\SubscriptionEntitlement::class, 
+        array( 
+			'component' => Models\SubscriptionEntitlementComponent::class
+		));
+        return $subscription_entitlement;
+    }
+
+    public function itemEntitlement() 
+    {
+        $item_entitlement = $this->_get('item_entitlement', Models\ItemEntitlement::class);
+        return $item_entitlement;
+    }
+
+    public function inAppSubscription() 
+    {
+        $in_app_subscription = $this->_get('in_app_subscription', Models\InAppSubscription::class);
+        return $in_app_subscription;
+    }
+
+    public function entitlementOverride() 
+    {
+        $entitlement_override = $this->_get('entitlement_override', Models\EntitlementOverride::class);
+        return $entitlement_override;
+    }
+
+    public function purchase() 
+    {
+        $purchase = $this->_get('purchase', Models\Purchase::class);
+        return $purchase;
+    }
+
 
     public function unbilledCharges() 
     {
@@ -510,6 +590,7 @@ class Result
     {
         $credit_notes = $this->_getList('credit_notes', Models\CreditNote::class,
         array( 
+			'einvoice' => Models\CreditNoteEinvoice::class, 
 			'line_items' => Models\CreditNoteLineItem::class, 
 			'discounts' => Models\CreditNoteDiscount::class, 
 			'line_item_discounts' => Models\CreditNoteLineItemDiscount::class, 
@@ -517,7 +598,9 @@ class Result
 			'taxes' => Models\CreditNoteTax::class, 
 			'line_item_taxes' => Models\CreditNoteLineItemTax::class, 
 			'linked_refunds' => Models\CreditNoteLinkedRefund::class, 
-			'allocations' => Models\CreditNoteAllocation::class
+			'allocations' => Models\CreditNoteAllocation::class, 
+			'shipping_address' => Models\CreditNoteShippingAddress::class, 
+			'billing_address' => Models\CreditNoteBillingAddress::class
 		));
         return $credit_notes;
     }
@@ -541,6 +624,15 @@ class Result
         return $hierarchies;
     }
     
+    public function downloads() 
+    {
+        $downloads = $this->_getList('downloads', Models\Download::class,
+        array( 
+			
+		));
+        return $downloads;
+    }
+    
     public function invoices() 
     {
         $invoices = $this->_getList('invoices', Models\Invoice::class,
@@ -559,7 +651,8 @@ class Result
 			'linked_orders' => Models\InvoiceLinkedOrder::class, 
 			'notes' => Models\InvoiceNote::class, 
 			'shipping_address' => Models\InvoiceShippingAddress::class, 
-			'billing_address' => Models\InvoiceBillingAddress::class
+			'billing_address' => Models\InvoiceBillingAddress::class, 
+			'einvoice' => Models\InvoiceEinvoice::class
 		));
         return $invoices;
     }
@@ -572,6 +665,15 @@ class Result
 			'parent_periods' => Models\DifferentialPriceParentPeriod::class
 		));
         return $differential_prices;
+    }
+    
+    public function inAppSubscriptions() 
+    {
+        $in_app_subscriptions = $this->_getList('in_app_subscriptions', Models\InAppSubscription::class,
+        array( 
+			
+		));
+        return $in_app_subscriptions;
     }
     
 

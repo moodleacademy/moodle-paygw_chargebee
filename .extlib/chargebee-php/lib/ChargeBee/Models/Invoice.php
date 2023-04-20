@@ -64,10 +64,13 @@ class Invoice extends Model
     'notes',
     'shippingAddress',
     'billingAddress',
+    'einvoice',
     'paymentOwner',
     'voidReasonCode',
     'deleted',
     'vatNumberPrefix',
+    'channel',
+    'businessEntityId',
   ];
 
 
@@ -115,6 +118,16 @@ class Invoice extends Model
     return Request::send(Request::POST, Util::encodeURIPath("invoices",$id,"apply_payments"), $params, $env, $headers);
   }
 
+  public static function syncUsages($id, $env = null, $headers = array())
+  {
+    return Request::send(Request::POST, Util::encodeURIPath("invoices",$id,"sync_usages"), array(), $env, $headers);
+  }
+
+  public static function deleteLineItems($id, $params = array(), $env = null, $headers = array())
+  {
+    return Request::send(Request::POST, Util::encodeURIPath("invoices",$id,"delete_line_items"), $params, $env, $headers);
+  }
+
   public static function applyCredits($id, $params = array(), $env = null, $headers = array())
   {
     return Request::send(Request::POST, Util::encodeURIPath("invoices",$id,"apply_credits"), $params, $env, $headers);
@@ -145,6 +158,11 @@ class Invoice extends Model
     return Request::send(Request::POST, Util::encodeURIPath("invoices",$id,"pdf"), $params, $env, $headers);
   }
 
+  public static function downloadEinvoice($id, $env = null, $headers = array())
+  {
+    return Request::send(Request::GET, Util::encodeURIPath("invoices",$id,"download_einvoice"), array(), $env, $headers);
+  }
+
   public static function addCharge($id, $params, $env = null, $headers = array())
   {
     return Request::send(Request::POST, Util::encodeURIPath("invoices",$id,"add_charge"), $params, $env, $headers);
@@ -173,6 +191,16 @@ class Invoice extends Model
   public static function recordPayment($id, $params, $env = null, $headers = array())
   {
     return Request::send(Request::POST, Util::encodeURIPath("invoices",$id,"record_payment"), $params, $env, $headers);
+  }
+
+  public static function recordTaxWithheld($id, $params, $env = null, $headers = array())
+  {
+    return Request::send(Request::POST, Util::encodeURIPath("invoices",$id,"record_tax_withheld"), $params, $env, $headers);
+  }
+
+  public static function removeTaxWithheld($id, $params, $env = null, $headers = array())
+  {
+    return Request::send(Request::POST, Util::encodeURIPath("invoices",$id,"remove_tax_withheld"), $params, $env, $headers);
   }
 
   public static function refund($id, $params = array(), $env = null, $headers = array())
@@ -213,6 +241,16 @@ class Invoice extends Model
   public static function updateDetails($id, $params = array(), $env = null, $headers = array())
   {
     return Request::send(Request::POST, Util::encodeURIPath("invoices",$id,"update_details"), $params, $env, $headers);
+  }
+
+  public static function resendEinvoice($id, $env = null, $headers = array())
+  {
+    return Request::send(Request::POST, Util::encodeURIPath("invoices",$id,"resend_einvoice"), array(), $env, $headers);
+  }
+
+  public static function sendEinvoice($id, $env = null, $headers = array())
+  {
+    return Request::send(Request::POST, Util::encodeURIPath("invoices",$id,"send_einvoice"), array(), $env, $headers);
   }
 
  }

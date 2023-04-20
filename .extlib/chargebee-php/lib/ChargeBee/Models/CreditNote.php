@@ -30,6 +30,8 @@ class CreditNote extends Model
     'generatedAt',
     'resourceVersion',
     'updatedAt',
+    'channel',
+    'einvoice',
     'subTotal',
     'subTotalInLocalCurrency',
     'totalInLocalCurrency',
@@ -47,6 +49,9 @@ class CreditNote extends Model
     'deleted',
     'createReasonCode',
     'vatNumberPrefix',
+    'businessEntityId',
+    'shippingAddress',
+    'billingAddress',
   ];
 
 
@@ -67,6 +72,11 @@ class CreditNote extends Model
   public static function pdf($id, $params = array(), $env = null, $headers = array())
   {
     return Request::send(Request::POST, Util::encodeURIPath("credit_notes",$id,"pdf"), $params, $env, $headers);
+  }
+
+  public static function downloadEinvoice($id, $env = null, $headers = array())
+  {
+    return Request::send(Request::GET, Util::encodeURIPath("credit_notes",$id,"download_einvoice"), array(), $env, $headers);
   }
 
   public static function refund($id, $params = array(), $env = null, $headers = array())
@@ -97,6 +107,26 @@ class CreditNote extends Model
   public static function delete($id, $params = array(), $env = null, $headers = array())
   {
     return Request::send(Request::POST, Util::encodeURIPath("credit_notes",$id,"delete"), $params, $env, $headers);
+  }
+
+  public static function removeTaxWithheldRefund($id, $params, $env = null, $headers = array())
+  {
+    return Request::send(Request::POST, Util::encodeURIPath("credit_notes",$id,"remove_tax_withheld_refund"), $params, $env, $headers);
+  }
+
+  public static function resendEinvoice($id, $env = null, $headers = array())
+  {
+    return Request::send(Request::POST, Util::encodeURIPath("credit_notes",$id,"resend_einvoice"), array(), $env, $headers);
+  }
+
+  public static function sendEinvoice($id, $env = null, $headers = array())
+  {
+    return Request::send(Request::POST, Util::encodeURIPath("credit_notes",$id,"send_einvoice"), array(), $env, $headers);
+  }
+
+  public static function importCreditNote($params, $env = null, $headers = array())
+  {
+    return Request::send(Request::POST, Util::encodeURIPath("credit_notes","import_credit_note"), $params, $env, $headers);
   }
 
  }

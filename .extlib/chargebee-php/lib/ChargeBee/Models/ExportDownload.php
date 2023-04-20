@@ -9,6 +9,7 @@ class ExportDownload extends Model
   protected $allowed = [
     'downloadUrl',
     'validTill',
+    'mimeType',
   ];
 
 }

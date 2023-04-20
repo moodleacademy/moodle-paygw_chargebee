@@ -55,6 +55,8 @@ class Subscription extends Model
     'planAmountInDecimal',
     'cancelScheduleCreatedAt',
     'offlinePaymentMethod',
+    'channel',
+    'netTermDays',
     'subscriptionItems',
     'itemTiers',
     'chargedItems',
@@ -82,6 +84,8 @@ class Subscription extends Model
     'freePeriodUnit',
     'createPendingInvoices',
     'autoCloseInvoices',
+    'discounts',
+    'businessEntityId',
   ];
 
 
@@ -117,6 +121,11 @@ class Subscription extends Model
   public static function contractTermsForSubscription($id, $params = array(), $env = null, $headers = array())
   {
     return Request::send(Request::GET, Util::encodeURIPath("subscriptions",$id,"contract_terms"), $params, $env, $headers);
+  }
+
+  public static function listDiscounts($id, $params = array(), $env = null, $headers = array())
+  {
+    return Request::send(Request::GET, Util::encodeURIPath("subscriptions",$id,"discounts"), $params, $env, $headers);
   }
 
   public static function retrieve($id, $env = null, $headers = array())
@@ -212,6 +221,11 @@ class Subscription extends Model
   public static function importContractTerm($id, $params = array(), $env = null, $headers = array())
   {
     return Request::send(Request::POST, Util::encodeURIPath("subscriptions",$id,"import_contract_term"), $params, $env, $headers);
+  }
+
+  public static function importUnbilledCharges($id, $params, $env = null, $headers = array())
+  {
+    return Request::send(Request::POST, Util::encodeURIPath("subscriptions",$id,"import_unbilled_charges"), $params, $env, $headers);
   }
 
   public static function importForItems($id, $params, $env = null, $headers = array())
