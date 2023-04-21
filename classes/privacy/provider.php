@@ -25,6 +25,8 @@
 namespace paygw_chargebee\privacy;
 
 use core_privacy\local\metadata\collection;
+use core_payment\privacy\paygw_provider;
+use core_privacy\local\request\writer;
 
 /**
  * Privacy Subsystem implementation for paygw_chargebee.
@@ -32,7 +34,10 @@ use core_privacy\local\metadata\collection;
  * @copyright  2022 Rajneel Totaram <rajneel.totaram@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class provider implements \core_privacy\local\metadata\provider, \core_privacy\local\request\data_provider {
+class provider implements
+    \core_privacy\local\metadata\provider,
+    \core_privacy\local\request\data_provider,
+    paygw_provider {
 
     /**
      * Returns metadata about this plugin.
@@ -41,14 +46,71 @@ class provider implements \core_privacy\local\metadata\provider, \core_privacy\l
      * @return collection A listing of user data stored in this plugin.
      */
     public static function get_metadata(collection $collection): collection {
+        // Data stored internally.
         $collection->add_database_table(
             'paygw_chargebee',
             [
                 'userid' => 'privacy:metadata:paygw_chargebee:userid',
                 'customerid' => 'privacy:metadata:paygw_chargebee:customerid',
+                'transactionid' => 'privacy:metadata:paygw_chargebee:transactionid',
+                'invoicenumber' => 'privacy:metadata:paygw_chargebee:invoicenumber',
+                'amountpaid' => 'privacy:metadata:paygw_chargebee:amountpaid',
             ],
             'privacy:metadata:paygw_chargebee'
         );
+
+        // Data shared with Chargebee.
+        $collection->add_external_location_link(
+            'chargebee_com',
+            [
+                'userid' => 'privacy:metadata:paygw_chargebee_com:userid',
+                'firstname' => 'privacy:metadata:paygw_chargebee_com:firstname',
+                'lastname' => 'privacy:metadata:paygw_chargebee_com:lastname',
+                'email' => 'privacy:metadata:paygw_chargebee_com:email',
+            ],
+            'privacy:metadata:paygw_chargebee_com'
+        );
+
         return $collection;
+    }
+
+    /**
+     * Export all user data for the specified payment record, and the given context.
+     *
+     * @param \context $context Context
+     * @param array $subcontext The location within the current context that the payment data belongs
+     * @param \stdClass $payment The payment record
+     */
+    public static function export_payment_data(\context $context, array $subcontext, \stdClass $payment) {
+        global $DB;
+
+        $subcontext[] = get_string('gatewayname', 'paygw_chargebee');
+        $record = $DB->get_record('paygw_chargebee', ['paymentid' => $payment->id]);
+
+        $data = (object) [
+            'transactionid' => $record->transactionid,
+            'invoicenumber' => $record->invoicenumber,
+        ];
+        writer::with_context($context)->export_data(
+            $subcontext,
+            $data
+        );
+    }
+
+    /**
+     * Delete all user data related to the given payments.
+     *
+     * @param string $paymentsql SQL query that selects payment.id field for the payments
+     * @param array $paymentparams Array of parameters for $paymentsql
+     */
+    public static function delete_data_for_payment_sql(string $paymentsql, array $paymentparams) {
+        global $DB;
+
+        // Instead of deleting the records, we will unset the userid and customerid,
+        // since payment reports and audits may be based on this data.
+
+        // Empty the userid and customerid fields.
+        $DB->set_field_select('paygw_chargebee', 'userid', 0, "paymentid IN ({$paymentsql})", $paymentparams);
+        $DB->set_field_select('paygw_chargebee', 'customerid', '', "paymentid IN ({$paymentsql})", $paymentparams);
     }
 }
