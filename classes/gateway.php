@@ -39,7 +39,7 @@ class gateway extends \core_payment\gateway {
      * the plugin does not account for that when giving the list of supported currencies.
      *
      * {@link https://www.chargebee.com/docs/2.0/supported-currencies.html}
-     *
+     *YR
      * @return string[]
      */
     public static function get_supported_currencies(): array {
@@ -51,7 +51,7 @@ class gateway extends \core_payment\gateway {
             'MMK', 'MOP', 'MRO', 'MUR', 'MVR', 'MWK', 'MXN', 'MYR', 'MZN', 'NAD', 'NGN', 'NIO', 'NOK', 'NPR', 'NZD', 'PAB',
             'PEN', 'PGK', 'PHP', 'PKR', 'PLN', 'QAR', 'RON', 'RSD', 'RUB', 'SAR', 'SBD', 'SEK', 'SGD', 'SHP', 'SLL', 'SOS',
             'SRD', 'STD', 'SYP', 'THB', 'TJS', 'TOP', 'TRY', 'TTD', 'TWD', 'TZS', 'UAH', 'UGX', 'UYU', 'UZS', 'VEF', 'VND',
-            'WST', 'XAF', 'XCD', 'XOF', 'ZAR', 'ZMK', 'ZWL',
+            'WST', 'XAF', 'XCD', 'XOF', 'ZAR', 'ZMW', 'ZWL',
         ];
     }
 
