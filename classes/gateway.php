@@ -39,7 +39,7 @@ class gateway extends \core_payment\gateway {
      * the plugin does not account for that when giving the list of supported currencies.
      *
      * {@link https://www.chargebee.com/docs/2.0/supported-currencies.html}
-     *YR
+     *
      * @return string[]
      */
     public static function get_supported_currencies(): array {

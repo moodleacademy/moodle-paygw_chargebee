@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-/// TODO: Is there a better way to do this?
+// TODO: Is there a better way to do this?
 // Manually include Guzzle libs for now.
 require_once(__DIR__ . '/GuzzleHttp/functions_include.php');
 require_once(__DIR__ . '/GuzzleHttp/Psr7/functions_include.php');

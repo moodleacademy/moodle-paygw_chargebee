@@ -162,7 +162,7 @@ class chargebee_helper {
      * Get a Chargebee Hosted Page from a given unique identifier
      *
      * @param string $identifier unique identifier of the hosted page resource
-     * @return
+     * @return mixed The Chargebee hosted page
      */
     public function get_hosted_page(string $identifier) {
         // Retrieve hosted page.
@@ -261,6 +261,9 @@ class chargebee_helper {
 
     /**
      * Build an array of event data
+     *
+     * @param array $data
+     * @return array The event data array
      */
     public function build_event_data($data) {
         global $DB, $USER;
@@ -302,6 +305,10 @@ class chargebee_helper {
 
     /**
      * Log the event
+     *
+     * @param string $eventtype Type of event
+     * @param array $data Data for the event
+     * @return void
      */
     public function log_event($eventtype, $data) {
         $eventdata = $this->build_event_data($data);

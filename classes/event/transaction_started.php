@@ -25,6 +25,7 @@
 namespace paygw_chargebee\event;
 
 /**
+ * Transaction started event
  * @copyright  2023 Rajneel Totaram <rajneel.totaram@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
