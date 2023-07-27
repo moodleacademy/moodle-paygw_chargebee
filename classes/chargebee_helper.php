@@ -228,6 +228,9 @@ class chargebee_helper {
 
         $DB->insert_record('paygw_chargebee', $record);
 
+        // Send acknowledgement that we've processed this payment.
+        $result = HostedPage::acknowledge($identifier);
+
         return $record->invoicenumber;
     }
 
