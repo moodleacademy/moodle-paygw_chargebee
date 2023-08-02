@@ -62,4 +62,21 @@ $chargebeehelper->log_event(CHARGEBEE_TRANSACTION_STARTED,
     ]
 );
 
-redirect($checkouturl);
+// Create a task to check on this transaction after some time.
+$data = [
+    'component' => $component,
+    'paymentarea' => $paymentarea,
+    'itemid' => $itemid,
+    'remotereference' => $checkouturl->id,
+    'userid' => $USER->id,
+    'message' => ''
+];
+
+$task = new \paygw_chargebee\task\finalise_transaction();
+$task->set_custom_data($data);
+// Run this task as a specific user.
+$task->set_userid($USER->id);
+$task->set_next_run_time(time() + 200); // 10 min???
+\core\task\manager::queue_adhoc_task($task, true);
+
+redirect($checkouturl->url);

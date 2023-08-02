@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'paygw_chargebee';
-$plugin->release = '0.1.0';
-$plugin->version = 2023042000;
+$plugin->release = '0.2.0';
+$plugin->version = 2023080200;
 $plugin->requires = 2021051700;
 $plugin->maturity = MATURITY_STABLE;

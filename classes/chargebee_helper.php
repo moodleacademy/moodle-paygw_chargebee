@@ -67,6 +67,26 @@ class chargebee_helper {
     public const STATUS_CANCELLED = 'cancelled';
 
     /**
+     * @var string Hosted page state - Requested
+     */
+    public const STATE_REQUESTED = 'requested';
+
+    /**
+     * @var string Hosted page state - Succeeded
+     */
+    public const STATE_SUCCEEDED = 'succeeded';
+
+    /**
+     * @var string Hosted page state - Acknowledged
+     */
+    public const STATE_ACKNOWLEDGED = 'acknowledged';
+
+    /**
+     * @var string Hosted page state - Cancelled
+     */
+    public const STATE_CANCELLED = 'cancelled';
+
+    /**
      * @var  string Chargebee Site name.
      */
     private $sitename;
@@ -103,9 +123,9 @@ class chargebee_helper {
      * @param string $currency
      * @param string $description
      * @param string $redirecturl
-     * @return string Hosted page url
+     * @return mixed An object containing the ID and URL of the Chargebee HostedPage.
      */
-    public function get_checkout_url($user, float $cost, string $currency, string $description, string $redirecturl): string {
+    public function get_checkout_url($user, float $cost, string $currency, string $description, string $redirecturl) {
         // Get the Chargebee HostedPage.
         $result = HostedPage::checkoutOneTime(array(
             "currency_code" => $currency,
@@ -122,8 +142,12 @@ class chargebee_helper {
             ))
         ));
 
-        // Return the url of the HostedPage.
-        return $result->hostedPage()->url;
+        // Return the id and url of the HostedPage.
+        $chargebeeurl = new \stdClass();
+        $chargebeeurl->id = $result->hostedPage()->id;
+        $chargebeeurl->url = $result->hostedPage()->url;
+
+        return $chargebeeurl;
     }
 
     /**
@@ -172,6 +196,19 @@ class chargebee_helper {
     }
 
     /**
+     * Retrieve a Chargebee invoice
+     *
+     * @param string $invoiceid Invoice id/number
+     * @return mixed Resource object representing a Chargebee invoice
+     */
+    public function get_invoice(string $invoiceid) {
+        // Retrieve invoice.
+        $result = Invoice::retrieve($invoiceid);
+
+        return $result->invoice();
+    }
+
+    /**
      * Void an unpaid invoice
      *
      * @param string $identifier unique identifier of the hosted page resource
@@ -195,6 +232,9 @@ class chargebee_helper {
                 );
 
                 $invoice = $result->invoice();
+
+                // Send acknowledgement that we've processed this payment.
+                $ack = HostedPage::acknowledge($identifier);
 
                 return ['invoice' => $invoice->id, 'status' => $invoice->status];
             }
