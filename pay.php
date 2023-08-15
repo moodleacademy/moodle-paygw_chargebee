@@ -76,7 +76,7 @@ $task = new \paygw_chargebee\task\finalise_transaction();
 $task->set_custom_data($data);
 // Run this task as a specific user.
 $task->set_userid($USER->id);
-$task->set_next_run_time(time() + 200); // 10 min???
+$task->set_next_run_time(time() + 900); // Run thus task after 15 minutes.
 \core\task\manager::queue_adhoc_task($task, true);
 
 redirect($checkouturl->url);
