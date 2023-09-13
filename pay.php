@@ -53,15 +53,6 @@ $redirecturl = $CFG->wwwroot . '/payment/gateway/chargebee/process.php?component
 
 $checkouturl = $chargebeehelper->get_checkout_url($USER, $cost, $payable->get_currency(), $description, $redirecturl);
 
-// Log event.
-$chargebeehelper->log_event(CHARGEBEE_TRANSACTION_STARTED,
-    [
-        'component' => $component,
-        'paymentarea' => $paymentarea,
-        'itemid' => $itemid,
-    ]
-);
-
 // Create a task to check on this transaction after some time.
 $data = [
     'component' => $component,
@@ -78,5 +69,14 @@ $task->set_custom_data($data);
 $task->set_userid($USER->id);
 $task->set_next_run_time(time() + 900); // Run thus task after 15 minutes.
 \core\task\manager::queue_adhoc_task($task, true);
+
+// Log event.
+$chargebeehelper->log_event(CHARGEBEE_TRANSACTION_STARTED,
+    [
+        'component' => $component,
+        'paymentarea' => $paymentarea,
+        'itemid' => $itemid,
+    ]
+);
 
 redirect($checkouturl->url);

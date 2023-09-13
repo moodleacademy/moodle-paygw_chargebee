@@ -46,6 +46,11 @@ class finalise_transaction extends \core\task\adhoc_task {
         // Get the data for this task.
         $data = $this->get_custom_data();
 
+        // Cannot proceed if Chargebee identifier is not available.
+        if (!isset($data->remotereference)) {
+            return;
+        }
+
         $config = (object) payment_helper::get_gateway_configuration(
             $data->component,
             $data->paymentarea,
