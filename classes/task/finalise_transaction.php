@@ -185,9 +185,25 @@ class finalise_transaction extends \core\task\adhoc_task {
                 }
             break;
             case $chargebeehelper::STATE_REQUESTED:
-                // This transaction may have been abandoned. It is still not paid.
-                // Just drop it.
-                mtrace('=== Nothing to do... ===');
+                // Status is still "requested".
+                // Let's try again one more time.
+                if (!isset($data->retry)) {
+                    $data->retry = 1;
+
+                    // Create a new adhoc task to try again.
+                    $retrytask = new \paygw_chargebee\task\finalise_transaction();
+                    $retrytask->set_custom_data($data);
+                    $retrytask->set_userid($data->userid);
+                    $retrytask->set_next_run_time(time() + 600); // Run this task again after 10 minutes.
+                    \core\task\manager::queue_adhoc_task($retrytask, true);
+
+                    mtrace(' - Rescheduling to try again after 10 minutes.');
+                } else {
+                    mtrace(' - Re-trying after 10 minutes.');
+                    // This transaction may have been abandoned. It is still not paid.
+                    // Just drop it.
+                    mtrace('=== Nothing to do... ===');
+                }
             break;
         }
     }
