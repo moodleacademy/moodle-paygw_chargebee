@@ -24,9 +24,13 @@ class PaymentSource extends Model
     'issuingCountry',
     'card',
     'bankAccount',
+    'boleto',
+    'billingAddress',
     'amazonPayment',
     'upi',
     'paypal',
+    'venmo',
+    'klarnaPayNow',
     'mandates',
     'deleted',
     'businessEntityId',
@@ -55,6 +59,11 @@ class PaymentSource extends Model
   public static function createUsingPaymentIntent($params, $env = null, $headers = array())
   {
     return Request::send(Request::POST, Util::encodeURIPath("payment_sources","create_using_payment_intent"), $params, $env, $headers);
+  }
+
+  public static function createVoucherPaymentSource($params, $env = null, $headers = array())
+  {
+    return Request::send(Request::POST, Util::encodeURIPath("payment_sources","create_voucher_payment_source"), $params, $env, $headers);
   }
 
   public static function createCard($params, $env = null, $headers = array())

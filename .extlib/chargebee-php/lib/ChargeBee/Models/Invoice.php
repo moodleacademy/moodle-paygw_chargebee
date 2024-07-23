@@ -40,6 +40,7 @@ class Invoice extends Model
     'totalInLocalCurrency',
     'localCurrencyCode',
     'tax',
+    'localCurrencyExchangeRate',
     'firstInvoice',
     'newSalesAmount',
     'hasAdvanceCharges',
@@ -63,14 +64,18 @@ class Invoice extends Model
     'linkedOrders',
     'notes',
     'shippingAddress',
+    'statementDescriptor',
     'billingAddress',
     'einvoice',
     'paymentOwner',
     'voidReasonCode',
     'deleted',
+    'taxCategory',
     'vatNumberPrefix',
     'channel',
     'businessEntityId',
+    'siteDetailsAtCreation',
+    'taxOrigin',
   ];
 
 
@@ -163,6 +168,11 @@ class Invoice extends Model
     return Request::send(Request::GET, Util::encodeURIPath("invoices",$id,"download_einvoice"), array(), $env, $headers);
   }
 
+  public static function listPaymentReferenceNumbers($params = array(), $env = null, $headers = array())
+  {
+    return Request::send(Request::GET, Util::encodeURIPath("invoices","payment_reference_numbers"), $params, $env, $headers);
+  }
+
   public static function addCharge($id, $params, $env = null, $headers = array())
   {
     return Request::send(Request::POST, Util::encodeURIPath("invoices",$id,"add_charge"), $params, $env, $headers);
@@ -241,6 +251,11 @@ class Invoice extends Model
   public static function updateDetails($id, $params = array(), $env = null, $headers = array())
   {
     return Request::send(Request::POST, Util::encodeURIPath("invoices",$id,"update_details"), $params, $env, $headers);
+  }
+
+  public static function installments($id, $params, $env = null, $headers = array())
+  {
+    return Request::send(Request::POST, Util::encodeURIPath("invoices",$id,"installments"), $params, $env, $headers);
   }
 
   public static function resendEinvoice($id, $env = null, $headers = array())
