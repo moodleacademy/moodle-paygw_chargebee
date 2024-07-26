@@ -60,7 +60,7 @@ $data = [
     'itemid' => $itemid,
     'remotereference' => $checkouturl->id,
     'userid' => $USER->id,
-    'message' => ''
+    'message' => '',
 ];
 
 $task = new \paygw_chargebee\task\finalise_transaction();

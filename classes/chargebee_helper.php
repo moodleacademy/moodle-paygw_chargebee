@@ -127,20 +127,22 @@ class chargebee_helper {
      */
     public function get_checkout_url($user, float $cost, string $currency, string $description, string $redirecturl) {
         // Get the Chargebee HostedPage.
-        $result = HostedPage::checkoutOneTime(array(
+        $result = HostedPage::checkoutOneTime([
             "currency_code" => $currency,
             "redirectUrl" => $redirecturl,
-            "customer" => array(
+            "customer" => [
                 "id" => $this->customeridprefix . $user->id,
                 "email" => $user->email,
                 "firstName" => $user->firstname,
                 "lastName" => $user->lastname,
-            ),
-            "charges" => array(array(
-                "amount" => $this->get_unit_amount($cost, $currency),
-                "description" => $description
-            ))
-        ));
+            ],
+            "charges" => [
+                [
+                    "amount" => $this->get_unit_amount($cost, $currency),
+                    "description" => $description,
+                ],
+            ],
+        ]);
 
         // Return the id and url of the HostedPage.
         $chargebeeurl = new \stdClass();
@@ -170,10 +172,10 @@ class chargebee_helper {
             // Check if invoice transaction id exists in db already.
             if (!$record = $DB->get_record(
                 'paygw_chargebee',
-                array(
+                [
                     'transactionid' => $hostedpage->content['invoice']['linked_payments'][0]['txn_id'],
-                    'userid' => $userid
-                )
+                    'userid' => $userid,
+                ]
             )) {
                 return true;
             }

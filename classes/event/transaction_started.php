@@ -68,7 +68,7 @@ class transaction_started extends \core\event\base {
             return null;
         }
 
-        return new \moodle_url('/course/view.php', array('id' => $this->courseid));
+        return new \moodle_url('/course/view.php', ['id' => $this->courseid]);
     }
 
 

@@ -32,7 +32,6 @@ use paygw_chargebee\chargebee_helper;
  * @copyright  2023 Rajneel Totaram <rajneel.totaram@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 class finalise_transaction extends \core\task\adhoc_task {
 
     /**
@@ -71,7 +70,7 @@ class finalise_transaction extends \core\task\adhoc_task {
                     $DB->record_exists('paygw_chargebee',
                     [
                         'invoicenumber' => $result->content['invoice']['id'],
-                        'transactionid' => $result->content['invoice']['linked_payments'][0]['txn_id']
+                        'transactionid' => $result->content['invoice']['linked_payments'][0]['txn_id'],
                     ])
                 ) {
                     // All good. Nothing to do.
@@ -84,7 +83,7 @@ class finalise_transaction extends \core\task\adhoc_task {
                 if ($DB->record_exists('paygw_chargebee',
                     [
                         'invoicenumber' => $result->content['invoice']['id'],
-                        'transactionid' => $result->content['invoice']['linked_payments'][0]['txn_id']
+                        'transactionid' => $result->content['invoice']['linked_payments'][0]['txn_id'],
                     ])) {
                     // Under normal circumstance, this should not happen.
                     // Send acknowledgement that we've processed this payment.
