@@ -47,11 +47,15 @@ class CreditNote extends Model
     'linkedRefunds',
     'allocations',
     'deleted',
+    'taxCategory',
+    'localCurrencyExchangeRate',
     'createReasonCode',
     'vatNumberPrefix',
     'businessEntityId',
     'shippingAddress',
     'billingAddress',
+    'siteDetailsAtCreation',
+    'taxOrigin',
   ];
 
 

@@ -3,7 +3,7 @@
     <library>
         <location>.extlib/chargebee-php</location>
         <name>Chargebee PHP Client Library - API V2</name>
-        <version>3.15.0</version>
+        <version>3.30.0</version>
         <license>MIT License</license>
         <licenseversion>1</licenseversion>
     </library>

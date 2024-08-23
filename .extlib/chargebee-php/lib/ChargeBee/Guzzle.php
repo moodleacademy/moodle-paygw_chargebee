@@ -23,11 +23,12 @@ class Guzzle
     }
 
     public static function doRequest($meth, $url, $env, $params = array(), $headers = array()) {
-        list($response, $httpCode) = self::request($meth, $url, $env, $params, $headers);
-        $respJson = self::processResponse($response, $httpCode);
-        return $respJson;
+        list($response, $httpCode, $responseHeaders) = self::request($meth, $url, $env, $params, $headers);
+        $respJson = self::processResponse($response, $httpCode, $responseHeaders);
+        $response = new Response($respJson, $responseHeaders);
+        return $response;
     }
-
+    
     public static function request($meth, $url, $env, $params, $headers) {
         $client = new Client();
 
@@ -68,9 +69,9 @@ class Guzzle
             $message = "IO exception occurred when trying to connect to " . $url . " . Reason : " . $guzzleMsg;
             throw new IOException($message, $errno);
         }
-
+        $responseHeaders = $response->getHeaders();
         $httpCode = $response->getStatusCode();
-        return array((string)$response->getBody(), $httpCode);
+        return array((string)$response->getBody(), $httpCode, $responseHeaders);
     }
 
     /**
@@ -93,7 +94,7 @@ class Guzzle
      * @throws OperationFailedException
      * @throws PaymentException
      */
-    public static function processResponse($response, $httpCode) {
+    public static function processResponse($response, $httpCode, $responseHeaders){
         $respJson = json_decode($response, true);
         if(!$respJson){
             if (strpos($response, '503') !== false)
@@ -104,7 +105,7 @@ class Guzzle
                  throw new Exception("Sorry, something went wrong when trying to process the request. If this problem persists, contact us at support@chargebee.com. \n type: internal_error, \n http_status_code: 500, \n error_code: internal_error ");
         }
         if ($httpCode < 200 || $httpCode > 299) {
-            self::handleAPIRespError($httpCode, $respJson,$response);
+            self::handleAPIRespError($httpCode, $respJson, $response, $responseHeaders);
         }
         return $respJson;
     }
@@ -119,23 +120,33 @@ class Guzzle
      * @throws OperationFailedException
      * @throws PaymentException
      */
-    public static function handleAPIRespError($httpCode, $respJson,$response) {
-        if(!isset($respJson['api_error_code'])){
+    public static function handleAPIRespError($httpCode, $respJson, $response, $responseHeaders){
+        if (!isset($respJson['api_error_code'])) {
             throw new Exception("No api_error_code attribute in content. Probably not a ChargeBee's error response. The content is \n " . $response);
         }
-        $type="unknown";
-        if(isset($respJson['type'])){
+        $type = "unknown";
+        if (isset($respJson['type'])) {
             $type = $respJson['type'];
         }
         if ($type == "payment") {
-            throw new PaymentException($httpCode, $respJson);
+            throw new PaymentException($httpCode, $respJson, $responseHeaders);
         } elseif ($type == "operation_failed") {
-            throw new OperationFailedException($httpCode, $respJson);
+            throw new OperationFailedException($httpCode, $respJson, $responseHeaders);
         } elseif ($type == "invalid_request") {
-            throw new InvalidRequestException($httpCode, $respJson);
+            throw new InvalidRequestException($httpCode, $respJson, $responseHeaders);
         } else {
-            throw new APIError($httpCode, $respJson);
+            throw new APIError($httpCode, $respJson, $responseHeaders);
         }
     }
 
+}
+
+class Response {
+    public $data;
+    public $headers;
+
+    public function __construct($data, $headers) {
+        $this->data = $data;
+        $this->headers = $headers;
+    }
 }
