@@ -7,11 +7,4 @@
         <license>MIT License</license>
         <licenseversion>1</licenseversion>
     </library>
-    <library>
-        <location>.extlib/GuzzleHttp</location>
-        <name>Guzzle, an extensible PHP HTTP client</name>
-        <version>7.3.0</version>
-        <license>MIT License</license>
-        <licenseversion>1</licenseversion>
-  </library>
 </libraries>

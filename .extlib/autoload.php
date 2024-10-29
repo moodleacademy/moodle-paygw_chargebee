@@ -24,32 +24,4 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-// TODO: Is there a better way to do this?
-// Manually include Guzzle libs for now.
-require_once(__DIR__ . '/GuzzleHttp/functions_include.php');
-require_once(__DIR__ . '/GuzzleHttp/Psr7/functions_include.php');
-require_once(__DIR__ . '/GuzzleHttp/Promise/functions_include.php');
-
 require_once(__DIR__ . '/chargebee-php/lib/init.php');
-
-spl_autoload_register(
-    function ($classname) {
-        $map = [
-            'GuzzleHttp' => 'GuzzleHttp',
-        ];
-        foreach ($map as $namespace => $subpath) {
-            $classpath = explode('_', $classname);
-            if ($classpath[0] != $namespace) {
-                $classpath = explode('\\', $classname);
-                if ($classpath[0] != $namespace) {
-                    continue;
-                }
-            }
-            $subpath = __DIR__ . '/';
-            $filepath = $subpath . implode('/', $classpath) . '.php';
-            if (file_exists($filepath)) {
-                require_once($filepath);
-            }
-        }
-    }
-);
